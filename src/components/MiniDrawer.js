@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -21,9 +21,28 @@ import ImgMediaCard from "./CardListView";
 import Login from "@mui/icons-material/Login";
 import { demoCustomerData, demoTicketData } from "../Demodata";
 import Popup from "./Popup";
-import { Add, AssignmentTurnedIn, Message, Settings } from "@mui/icons-material";
+import { Dashboard } from "../pages/Dashbaord";
+import { Profile } from "../pages/Profile";
+import {
+  Route,
+  Link,
+  BrowserRouter,
+  Routes
+} from "react-router-dom";
+import {
+  Add,
+  AssignmentTurnedIn,
+  Message,
+  Settings,
+} from "@mui/icons-material";
 import BasicTabs from "./Admintabs";
-import { createNewTicket, getAllTickets, getAllUsers, getTicketData, signin } from "../constants";
+import {
+  createNewTicket,
+  getAllTickets,
+  getAllUsers,
+  getTicketData,
+  signin,
+} from "../constants";
 
 const drawerWidth = 240;
 
@@ -98,7 +117,8 @@ export default function MiniDrawer() {
   const [ticketsData, setTicketsData] = useState(demoTicketData);
   const [customersData, setCustomersData] = useState(demoCustomerData);
   const [isTicketsLoaded, setisTicketsLoaded] = useState(false);
-  const [popupType, setPopupType] = useState('');
+  const [popupType, setPopupType] = useState("");
+  const [selectedTicket, setSelectedTicket] = useState("");
   const [openLogin, setOpenLogin] = useState(false);
 
   const handleDrawerOpen = () => {
@@ -116,113 +136,108 @@ export default function MiniDrawer() {
 
   const handlePopupClose = (data) => {
     console.log(data);
-    if(data.actionType==="createTicket")
-    {
-      const ticketData= {title:data[0], description: data[1]};
+    if (data.actionType === "createTicket") {
+      const ticketData = { title: data[0], description: data[1] };
       fetch(createNewTicket, {
-  method: 'POST', // or 'PUT'
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(ticketData),
-})
-  .then((response) => response.json())
-  .then((data) => {
-    console.log('Success:', data);
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
-    }
-    else if(data.actionType==="login")
-    {
-      const logindetails = {  userId: data[0],
-      password : data[1]}
-      fetch(signin, {
-        method: 'POST', // or 'PUT'
+        method: "POST", // or 'PUT'
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(ticketData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success:", data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    } else if (data.actionType === "login") {
+      const logindetails = { userId: data[0], password: data[1] };
+      fetch(signin, {
+        method: "POST", // or 'PUT'
+        headers: {
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(logindetails),
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log('Success:', data);
+          console.log("Success:", data);
         })
         .catch((error) => {
-          console.error('Error:', error);
+          console.error("Error:", error);
         });
-    }
-    else if(data.actionType==="register")
-    {
-      const logindetails = {  userId: data[0],
-      password : data[1]}
+    } else if (data.actionType === "register") {
+      const logindetails = { userId: data[0], password: data[1] };
       fetch(signin, {
-        method: 'POST', // or 'PUT'
+        method: "POST", // or 'PUT'
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(logindetails),
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log('Success:', data);
+          console.log("Success:", data);
         })
         .catch((error) => {
-          console.error('Error:', error);
+          console.error("Error:", error);
         });
     }
-    setPopupType('');
+    setPopupType("");
     setOpenLogin(false);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetch(getAllTickets)
-    .then(res => res.json())
-    .then(
-      (result) => {
-        // if(result.length>0)
-        // setTicketsData(result)
-        // else
-        setTicketsData(demoTicketData);
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          // if(result.length>0)
+          // setTicketsData(result)
+          // else
+          setTicketsData(demoTicketData);
 
-      setisTicketsLoaded(true);
-      },
-      // Note: it's important to handle errors here
-      // instead of a catch() block so that we don't swallow
-      // exceptions from actual bugs in components.
-      (error) => {
-       setTicketsData(demoTicketData);
-       setisTicketsLoaded(true);
-      }
-    );
+          setisTicketsLoaded(true);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setTicketsData(demoTicketData);
+          setisTicketsLoaded(true);
+        }
+      );
 
     fetch(getAllUsers)
-    .then(res => res.json())
-    .then(
-      (result) => {
-        if(result.length>0)
-        setCustomersData(result)
-        else
-        setCustomersData(demoCustomerData);
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (result.length > 0) setCustomersData(result);
+          else setCustomersData(demoCustomerData);
 
-      setisTicketsLoaded(true);
-      },
-      // Note: it's important to handle errors here
-      // instead of a catch() block so that we don't swallow
-      // exceptions from actual bugs in components.
-      (error) => {
-       setTicketsData(demoTicketData);
-       setisTicketsLoaded(true);
-      }
-    );
-
-    
-  },[]);
+          setisTicketsLoaded(true);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setTicketsData(demoTicketData);
+          setisTicketsLoaded(true);
+        }
+      );
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }}>
-      <Popup openLogin={openLogin} handleLoginClose={handlePopupClose} type={popupType}/>
+       <BrowserRouter>
+      <Popup
+        openLogin={openLogin}
+        handleLoginClose={handlePopupClose}
+        type={popupType}
+        selectedTicket={selectedTicket}
+      />
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
@@ -244,7 +259,10 @@ export default function MiniDrawer() {
           <IconButton
             color="inherit"
             aria-label="create ticket"
-            onClick={()=>{handlePopupOpen("createTicket")}}
+            onClick={() => {
+              setSelectedTicket(null);
+              handlePopupOpen("createTicket");
+            }}
             edge="end"
             sx={{
               marginRight: 5,
@@ -256,7 +274,9 @@ export default function MiniDrawer() {
           <IconButton
             color="inherit"
             aria-label="open drawer"
-            onClick={()=>{handlePopupOpen("loginRegister")}}
+            onClick={() => {
+              handlePopupOpen("loginRegister");
+            }}
             edge="end"
             sx={{
               marginRight: 5,
@@ -265,7 +285,6 @@ export default function MiniDrawer() {
           >
             <Login />
           </IconButton>
-          
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -280,28 +299,32 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Tickets", "Dashboard", "Profile", "Messages"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+          {[{name:"Tickets",url:"/"}, {name:"Dashboard",url:"/dashboard"}, {name:"Profile",url:"/profile"},{name: "Messages",url:"/"}].map(
+            (text, index) => (
+              <ListItem key={text.name} disablePadding sx={{ display: "block" }}>
+                 <Link to={text.url}>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
                   }}
                 >
-                  {index % 2 === 0 ? <AssignmentTurnedIn /> : <Message/>}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {index % 2 === 0 ? <AssignmentTurnedIn /> : <Message />}
+                  </ListItemIcon>
+                  <ListItemText primary={text.name} sx={{ opacity: open ? 1 : 0 }} ></ListItemText>
+                </ListItemButton>
+                </Link>
+              </ListItem>
+            )
+          )}
         </List>
         <Divider />
         <List>
@@ -330,12 +353,61 @@ export default function MiniDrawer() {
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-        {ticketsData.map((ticket,index) => {
-          return <ImgMediaCard key={ticket.id} data={ticket} index={index} onClick={()=> handlePopupOpen("createTicket")} />;
+        {/* <DrawerHeader />
+        {ticketsData.map((ticket, index) => {
+          return (
+            <ImgMediaCard
+              key={ticket.id}
+              data={ticket}
+              index={index}
+              handlePopupOpen={handlePopupOpen}
+              setSelectedTicketData={(ticketData) =>
+                setSelectedTicket(ticketData)
+              }
+            />
+          );
         })}
-        <BasicTabs customerData={customersData}/>
+        <BasicTabs customerData={customersData} /> */}
+        
+      <div>
+
+        <hr />
+
+        {/*
+          A <Switch> looks through all its children <Route>
+          elements and renders the first one whose path
+          matches the current URL. Use a <Switch> any time
+          you have multiple routes, but you want only one
+          of them to render at a time
+        */}
+       
+        <Routes>
+          <Route path="/" element={ <React.Fragment>
+            <DrawerHeader />
+        {ticketsData.map((ticket, index) => {
+          return (
+            <ImgMediaCard
+              key={ticket.id}
+              data={ticket}
+              index={index}
+              handlePopupOpen={handlePopupOpen}
+              setSelectedTicketData={(ticketData) =>
+                setSelectedTicket(ticketData)
+              }
+            />
+          );
+        })}
+        <BasicTabs customerData={customersData} />
+        </React.Fragment>}>
+           
+          </Route>
+          <Route path="/profile" element={ <Profile />}/>
+          <Route path="/dashboard" element={<Dashboard />}/>
+          </Routes>
+       
+      </div>
       </Box>
+      </BrowserRouter>
     </Box>
   );
 }
