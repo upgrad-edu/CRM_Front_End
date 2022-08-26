@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect,useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -18,10 +19,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ImgMediaCard from "./CardListView";
 import Login from "@mui/icons-material/Login";
-import { demoTicketData } from "../Demodata";
-import LoginPopup from "./Login";
-import { AssignmentTurnedIn, Message, Settings } from "@mui/icons-material";
+import { demoCustomerData, demoTicketData } from "../Demodata";
+import Popup from "./Popup";
+import { Add, AssignmentTurnedIn, Message, Settings } from "@mui/icons-material";
 import BasicTabs from "./Admintabs";
+import { createNewTicket, getAllTickets, getAllUsers, getTicketData, signin } from "../constants";
 
 const drawerWidth = 240;
 
@@ -92,8 +94,12 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const [openLogin, setOpenLogin] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [ticketsData, setTicketsData] = useState(demoTicketData);
+  const [customersData, setCustomersData] = useState(demoCustomerData);
+  const [isTicketsLoaded, setisTicketsLoaded] = useState(false);
+  const [popupType, setPopupType] = useState('');
+  const [openLogin, setOpenLogin] = useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -102,17 +108,121 @@ export default function MiniDrawer() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const handleLoginOpen = () => {
+
+  const handlePopupOpen = (type) => {
+    setPopupType(type);
     setOpenLogin(true);
   };
 
-  const handleLoginClose = () => {
+  const handlePopupClose = (data) => {
+    console.log(data);
+    if(data.actionType==="createTicket")
+    {
+      const ticketData= {title:data[0], description: data[1]};
+      fetch(createNewTicket, {
+  method: 'POST', // or 'PUT'
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(ticketData),
+})
+  .then((response) => response.json())
+  .then((data) => {
+    console.log('Success:', data);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+    }
+    else if(data.actionType==="login")
+    {
+      const logindetails = {  userId: data[0],
+      password : data[1]}
+      fetch(signin, {
+        method: 'POST', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(logindetails),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Success:', data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+    else if(data.actionType==="register")
+    {
+      const logindetails = {  userId: data[0],
+      password : data[1]}
+      fetch(signin, {
+        method: 'POST', // or 'PUT'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(logindetails),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Success:', data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+    setPopupType('');
     setOpenLogin(false);
   };
 
+  useEffect(()=>{
+    fetch(getAllTickets)
+    .then(res => res.json())
+    .then(
+      (result) => {
+        // if(result.length>0)
+        // setTicketsData(result)
+        // else
+        setTicketsData(demoTicketData);
+
+      setisTicketsLoaded(true);
+      },
+      // Note: it's important to handle errors here
+      // instead of a catch() block so that we don't swallow
+      // exceptions from actual bugs in components.
+      (error) => {
+       setTicketsData(demoTicketData);
+       setisTicketsLoaded(true);
+      }
+    );
+
+    fetch(getAllUsers)
+    .then(res => res.json())
+    .then(
+      (result) => {
+        if(result.length>0)
+        setCustomersData(result)
+        else
+        setCustomersData(demoCustomerData);
+
+      setisTicketsLoaded(true);
+      },
+      // Note: it's important to handle errors here
+      // instead of a catch() block so that we don't swallow
+      // exceptions from actual bugs in components.
+      (error) => {
+       setTicketsData(demoTicketData);
+       setisTicketsLoaded(true);
+      }
+    );
+
+    
+  },[]);
+
   return (
     <Box sx={{ display: "flex" }}>
-      <LoginPopup openLogin={openLogin} handleLoginClose={handleLoginClose} />
+      <Popup openLogin={openLogin} handleLoginClose={handlePopupClose} type={popupType}/>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
@@ -133,8 +243,20 @@ export default function MiniDrawer() {
           </Typography>
           <IconButton
             color="inherit"
+            aria-label="create ticket"
+            onClick={()=>{handlePopupOpen("createTicket")}}
+            edge="end"
+            sx={{
+              marginRight: 5,
+              ...(open && { display: "none" }),
+            }}
+          >
+            <Add />
+          </IconButton>
+          <IconButton
+            color="inherit"
             aria-label="open drawer"
-            onClick={handleLoginOpen}
+            onClick={()=>{handlePopupOpen("loginRegister")}}
             edge="end"
             sx={{
               marginRight: 5,
@@ -143,6 +265,7 @@ export default function MiniDrawer() {
           >
             <Login />
           </IconButton>
+          
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -208,10 +331,10 @@ export default function MiniDrawer() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        {demoTicketData.map((ticket) => {
-          return <ImgMediaCard key={ticket.id} data={ticket} />;
+        {ticketsData.map((ticket,index) => {
+          return <ImgMediaCard key={ticket.id} data={ticket} index={index} onClick={()=> handlePopupOpen("createTicket")} />;
         })}
-        <BasicTabs/>
+        <BasicTabs customerData={customersData}/>
       </Box>
     </Box>
   );

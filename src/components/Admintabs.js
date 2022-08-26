@@ -40,7 +40,7 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs() {
+export default function BasicTabs({customerData}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -57,18 +57,18 @@ export default function BasicTabs() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-      {demoCustomerData.map((ticket) => {
-          return <ImgMediaCard key={ticket.id} data={ticket} />;
+      {customerData.filter((customer)=>customer.userTypes==="CUSTOMER").map((customer,index) => {
+          return <ImgMediaCard key={customer.userId} data={customer} index={index}/>;
         })}
       </TabPanel>
       <TabPanel value={value} index={1}>
-      {demoEngineerData.map((ticket) => {
-          return <ImgMediaCard key={ticket.id} data={ticket} />;
+      {demoCustomerData.filter((customer)=>customer.userTypes==="ENGINEER").map((customer,index) => {
+          return <ImgMediaCard key={customer.userId} data={customer} index={index} />;
         })}
       </TabPanel>
       <TabPanel value={value} index={2}>
-      {demoTicketData.map((ticket) => {
-          return <ImgMediaCard key={ticket.id} data={ticket} />;
+      {demoTicketData.map((ticket,index) => {
+          return <ImgMediaCard key={ticket.id} data={ticket} index={index} />;
         })}
       </TabPanel>
     </Box>

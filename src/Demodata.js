@@ -1,81 +1,66 @@
 export const demoTicketData = [
   {
-    id: 1,
-    name: "ticket 1",
-    description: "resolve ticket 1",
+      "title": "Not Able to update",
+      "ticketPriority": 4,
+      "description": "Update functionality is not working for my device",
+      "status": "OPEN",
+      "reporter": "Vish01",
+      "assignee": "Vish07",
+      "id": "6215c1e85e0d5a53afcd4e68",
+      "createdAt": "2022-02-23T05:11:04.841Z",
+      "updatedAt": "2022-02-23T05:11:04.841Z"
   },
   {
-    id: 2,
-    name: "ticket 2",
-    description: "resolve ticket 2",
+      "title": "Not able to use the device",
+      "ticketPriority": 4,
+      "description": "Device is not turning on with power yessss",
+      "status": "CLOSED",
+      "reporter": "Vish01",
+      "assignee": "Vish07",
+      "id": "6215ceb86ba4fcbac9433282",
+      "createdAt": "2022-02-23T06:05:44.352Z",
+      "updatedAt": "2022-02-23T06:05:44.353Z"
   },
   {
-    id: 3,
-    name: "ticket 3",
-    description: "resolve ticket 3",
-  },
-  {
-    id: 4,
-    name: "ticket 4",
-    description: "resolve ticket 4",
-  },
-  {
-    id: 5,
-    name: "ticket 5",
-    description: "resolve ticket 5",
-  },
+      "title": "Not able to use the device",
+      "ticketPriority": 4,
+      "description": "Device is not turning on with powersdjhfghjksadkgfhjsdgfjhhdsajfghsdkjafhkjdsahfkjsdhfjkasdhfjkshfkjas...",
+      "status": "OPEN",
+      "reporter": "Vish01",
+      "assignee": "Vish07",
+      "id": "6215d8288d78a94e0a5a0610",
+      "createdAt": "2022-02-23T06:46:00.414Z",
+      "updatedAt": "2022-02-23T06:46:00.414Z"
+  }
 ];
+
 export const demoCustomerData = [
-    {
-      id: 1,
-      name: "Customer 1",
-      description: " Customer 1",
-    },
-    {
-      id: 2,
-      name: "Customer 2",
-      description: " Customer 2",
-    },
-    {
-      id: 3,
-      name: "Customer 3",
-      description: " Customer 3",
-    },
-    {
-      id: 4,
-      name: "Customer 4",
-      description: " Customer 4",
-    },
-    {
-      id: 5,
-      name: "Customer 5",
-      description: " Customer 5",
-    },
-  ];
-  export const demoEngineerData = [
-    {
-      id: 1,
-      name: "Engineer 1",
-      description: " engineer 1",
-    },
-    {
-      id: 2,
-      name: "Engineer 2",
-      description: " Engineer 2",
-    },
-    {
-      id: 3,
-      name: "Engineer 3",
-      description: " Engineer 3",
-    },
-    {
-      id: 4,
-      name: "Engineer 4",
-      description: " Engineer 4",
-    },
-    {
-      id: 5,
-      name: "Engineer 5",
-      description: " Engineer 5",
-    },
-  ];
+  {
+      "name": "Vishwa",
+      "userId": "admin",
+      "email": "kankvish@gmail.com",
+      "userTypes": "ADMIN",
+      "userStatus": "APPROVED"
+  },
+  {
+      "name": "Vishwa",
+      "userId": "Vish01",
+      "email": "abc@xyz1.com",
+      "userTypes": "ENGINEER",
+      "userStatus": "APPROVED"
+  },
+  {
+      "name": "Mohan",
+      "userId": "Mohan01",
+      "email": "abc@mohan.com",
+      "userTypes": "CUSTOMER",
+      "userStatus": "APPROVED"
+  },
+  {
+    "name": "Mohansd",
+    "userId": "Mowhan01",
+    "email": "abc@mohan.com",
+    "userTypes": "CUSTOMER",
+    "userStatus": "APPROVED"
+}
+];
