@@ -5,7 +5,7 @@ export const demoTicketData = [
       "description": "Update functionality is not working for my device",
       "status": "OPEN",
       "reporter": "Vish01",
-      "assignee": "Vish07",
+      "assignee": "admin",
       "id": "6215c1e85e0d5a53afcd4e68",
       "createdAt": "2022-02-23T05:11:04.841Z",
       "updatedAt": "2022-02-23T05:11:04.841Z"
@@ -16,7 +16,7 @@ export const demoTicketData = [
       "description": "Device is not turning on with power yessss",
       "status": "CLOSED",
       "reporter": "Vish01",
-      "assignee": "Vish07",
+      "assignee": "Vish01",
       "id": "6215ceb86ba4fcbac9433282",
       "createdAt": "2022-02-23T06:05:44.352Z",
       "updatedAt": "2022-02-23T06:05:44.353Z"
@@ -27,7 +27,7 @@ export const demoTicketData = [
       "description": "Device is not turning on with powersdjhfghjksadkgfhjsdgfjhhdsajfghsdkjafhkjdsahfkjsdhfjkasdhfjkshfkjas...",
       "status": "OPEN",
       "reporter": "Vish01",
-      "assignee": "Vish07",
+      "assignee": "Vish01",
       "id": "6215d8288d78a94e0a5a0610",
       "createdAt": "2022-02-23T06:46:00.414Z",
       "updatedAt": "2022-02-23T06:46:00.414Z"
