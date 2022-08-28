@@ -273,7 +273,7 @@ export default function MiniDrawer() {
           // instead of a catch() block so that we don't swallow
           // exceptions from actual bugs in components.
           (error) => {
-            setTicketsData(demoTicketData);
+            setCustomersData(demoCustomerData);
             setisTicketsLoaded(true);
           }
         );

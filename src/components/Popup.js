@@ -17,6 +17,8 @@ import {
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { Fragment, useEffect, useState } from "react";
+import { getAllUsers } from "../constants";
+import { demoCustomerData } from "../Demodata";
 
 export default function Popup({
   openLogin,
@@ -36,14 +38,23 @@ export default function Popup({
   const [userTypes, setUserTypes] = useState("");
   const [userData, setUserData] = useState(null);
   const [assignee, setAssignee ] = useState(null);
-  console.log(selectedTicket);
+  const [customersData, setCustomersData] = useState(demoCustomerData);
+  
   useEffect(() => {
     setUserData(JSON.parse(localStorage.getItem("userData")));
-    if (selectedTicket != null) {
+    if(title!==selectedTicket.title || description!==selectedTicket.description || status!==selectedTicket.status || assignee!==selectedTicket.assignee || ticketPriority!==selectedTicket.ticketPriority ){
       setTitle(selectedTicket.title);
       setDescription(selectedTicket.description);
       setStatus(selectedTicket.status);
       setTicketPriority(selectedTicket.ticketPriority);
+      setAssignee(selectedTicket.assignee);
+    }
+    else if (selectedTicket != null) {
+      setTitle(selectedTicket.title);
+      setDescription(selectedTicket.description);
+      setStatus(selectedTicket.status);
+      setTicketPriority(selectedTicket.ticketPriority);
+      setAssignee(selectedTicket.assignee);
     }
     else{
       setTitle('');
@@ -52,6 +63,34 @@ export default function Popup({
       setTicketPriority('');
     }
   }, [selectedTicket]);
+
+  useEffect(()=>{
+    if(userData!==null){
+    fetch(getAllUsers,{
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": userData?.accessToken,
+      },
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (result.length > 0) setCustomersData(result);
+          else setCustomersData(demoCustomerData);
+
+          
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setCustomersData(demoCustomerData);
+          
+        }
+      );
+    }else
+    alert('please login and refresh');
+  },[])
 
   return (
     <Dialog
@@ -261,9 +300,9 @@ export default function Popup({
     label="Assignee"
     onChange={(event)=>setAssignee(event.target.value)}
   >
-    <MenuItem value={10}>Ten</MenuItem>
-    <MenuItem value={20}>Twenty</MenuItem>
-    <MenuItem value={30}>Thirty</MenuItem>
+    {customersData.map((customer)=>{
+      return <MenuItem value={customer.userId}>{customer.userId}</MenuItem>
+    })}
   </Select>
 </FormControl>
                     }
