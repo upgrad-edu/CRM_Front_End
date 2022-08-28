@@ -5,6 +5,11 @@ import {
   DialogContentText,
   DialogContent,
   Box,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  Radio,
+  FormControlLabel
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -23,6 +28,7 @@ export default function Popup({
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [userTypes, setUserTypes] = useState("");
   console.log(selectedTicket);
   useEffect(() => {
     if (selectedTicket != null) {
@@ -38,6 +44,10 @@ export default function Popup({
         setIsRegister(false);
         setTitle('');
         setDescription('');
+        setEmail('');
+        setName('');
+        setPassword('');
+        setUserId('');
         handleLoginClose({ actionType: "close" });
       }}
     >
@@ -49,7 +59,7 @@ export default function Popup({
               To do any operations please Login or Register
             </DialogContentText>
             <Box component="form" autoComplete="off">
-              {isRegister && (
+              {isRegister && 
                 <TextField
                   autoFocus
                   error={name === ""}
@@ -62,8 +72,8 @@ export default function Popup({
                   required
                   onChange={(event) => setName(event.target.value)}
                 />
-              )}
-              {isRegister && (
+              }
+               
                 <TextField
                   autoFocus
                   required
@@ -76,8 +86,8 @@ export default function Popup({
                   variant="standard"
                   onChange={(event) => setUserId(event.target.value)}
                 />
-              )}
-              <TextField
+              
+              {isRegister && <TextField
                 autoFocus
                 required
                 error={email === ""}
@@ -88,7 +98,7 @@ export default function Popup({
                 fullWidth
                 variant="standard"
                 onChange={(event) => setEmail(event.target.value)}
-              />
+              />}
               <TextField
                 autoFocus
                 required
@@ -101,14 +111,33 @@ export default function Popup({
                 variant="standard"
                 onChange={(event) => setPassword(event.target.value)}
               />
+            {isRegister &&  <FormControl>
+      <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
+      <RadioGroup
+        aria-labelledby="demo-radio-buttons-group-label"
+        defaultValue="female"
+        name="radio-buttons-group"
+        onChange={(event)=>{setUserTypes(event.target.value)}}
+      >
+        <FormControlLabel value="ENGINEER" control={<Radio />} label="Engineer" />
+        <FormControlLabel value="CUSTOMER" control={<Radio />} label="Customer" />
+        <FormControlLabel value="ADMIN" control={<Radio />} label="Admin" />
+      </RadioGroup>
+    </FormControl>}
+    <br></br>
               {isRegister && (
                 <Button
+                disabled={userId==="" || email==="" || name==="" || password === "" || userTypes === "" }
                   onClick={() => {
                     setIsRegister(false);
                     handleLoginClose({
                       actionType: "register",
+                      userId:userId,
                       email: email,
                       password: password,
+                      userTypes: userTypes,
+                      name:name
+
                     });
                   }}
                 >
@@ -119,11 +148,12 @@ export default function Popup({
           </DialogContent>
           <DialogActions>
             {!isRegister && <Button
+            disabled={userId==="" || password===""}
               onClick={() => {
                 setIsRegister(false);
                 handleLoginClose({
                   actionType: "login",
-                  email: email,
+                  userId: userId,
                   password: password,
                 });
               }}
@@ -173,6 +203,7 @@ export default function Popup({
             </DialogContent>
             <DialogActions>
               <Button
+              disabled={title==="" || description===""}
                 onClick={() =>
                   handleLoginClose({
                     actionType:

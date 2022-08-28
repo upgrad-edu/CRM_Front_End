@@ -9,9 +9,7 @@ export default function ImgMediaCard({
   setSelectedTicketData,
 }) {
   return (
-    <Card
-      key={data.id}
-    >
+    <Card key={data.id}>
       <CardHeader
         avatar={<Avatar aria-label={data.id}>{index + 1}</Avatar>}
         action={
@@ -27,11 +25,21 @@ export default function ImgMediaCard({
         }
         title={data.title || data.name}
         subheader={
-          <div onClick={() => {
-            setSelectedTicketData(data);
-            handlePopupOpen("updateTicket");
-          }}>
-            <p>{data.description || data.email}</p>
+          <div
+            onClick={() => {
+              setSelectedTicketData(data);
+              handlePopupOpen("updateTicket");
+            }}
+          >
+            <p
+              style={{
+                maxWidth: "60vw",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {data.description || data.email}
+            </p>
             <p>Status: {data.status || data.userStatus}</p>
           </div>
         }

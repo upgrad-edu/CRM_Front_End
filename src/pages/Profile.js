@@ -12,14 +12,16 @@ import { KeyboardArrowRight } from "@mui/icons-material";
 import FormControl from "@mui/material/FormControl";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { userBasedonUserId } from "../constants";
+import { updateUserInfo, userBasedonUserId } from "../constants";
 
 export function Profile() {
-    const userIdfromStorage = localStorage.getItem('userId');
-const [UserData,setUserData] = useState(null);
-    useEffect(()=>{
-        if(userIdfromStorage !=null){
-        fetch(userBasedonUserId+`/${userIdfromStorage}`)
+  const userDataFromStorage = JSON.parse(localStorage.getItem("userData"));
+  const userIdfromStorage = userDataFromStorage?.userId;
+  const [UserData, setUserData] = useState(null);
+  useEffect(() => {
+    setUserData(userDataFromStorage);
+    if (userIdfromStorage != null) {
+      fetch(userBasedonUserId+`${userIdfromStorage}`)
         .then((res) => res.json())
         .then(
           (result) => {
@@ -32,153 +34,192 @@ const [UserData,setUserData] = useState(null);
           // instead of a catch() block so that we don't swallow
           // exceptions from actual bugs in components.
           (error) => {
-           setUserData(null);
-           alert('Some Error while fetching the details');
+            setUserData(null);
+            alert("Some Error while fetching the details");
           }
-        );}
-        else
-        alert('please login to fetch details')
+        );
+    } else alert("please login to fetch details and refresh the page");
+  }, []);
 
-    },[])
-
-    const [formValues, setFormValues] = useState({
-        name:{
-          value:'',
-          error:false,
-          errorMessage:'You must enter a name'
-        },
-        userId:{
-          value:'',
-          error:false,
-          errorMessage:'You must enter an userId'
-        },
-        email:{
-          value:'',
-          error:false,
-          errorMessage:'You must enter valid email'
-        },
-        userType:{
-          value:'ADMIN',
-          error:false,
-          errorMessage:'You must choose your user type'
-        }
+  const updateProfile = () => {
+    const profileData = {
+        name: formValues.name.value,
+        userId: formValues.userId.value,
+       email: formValues.email.value,
+        userTypes: formValues.userTypes.value,
+        userStatus: userDataFromStorage.userStatus
+}
+    fetch(updateUserInfo+`${userIdfromStorage}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profileData),
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log("Success:", result);
+        alert(result.message);
       })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
 
-      const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormValues({
-          ...formValues,
-          [name]:{
-            ...formValues[name],
-            value
-          }
-        })
+  const [formValues, setFormValues] = useState({
+    name: {
+      value: userDataFromStorage.name,
+      error: false,
+      errorMessage: "You must enter a name",
+    },
+    userId: {
+      value: userDataFromStorage.userId,
+      error: false,
+      errorMessage: "You must enter an userId",
+    },
+    email: {
+      value: userDataFromStorage.email,
+      error: false,
+      errorMessage: "You must enter valid email",
+    },
+    userTypes: {
+      value: userDataFromStorage.userTypes,
+      error: false,
+      errorMessage: "You must choose your user type",
+    },
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: {
+        ...formValues[name],
+        value,
+      },
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const formFields = Object.keys(formValues);
+    let newFormValues = { ...formValues };
+
+    for (let index = 0; index < formFields.length; index++) {
+      const currentField = formFields[index];
+      const currentValue = formValues[currentField].value;
+
+      if (currentValue === "") {
+        newFormValues = {
+          ...newFormValues,
+          [currentField]: {
+            ...newFormValues[currentField],
+            error: true,
+          },
+        };
       }
+    }
 
-      const handleSubmit = (e) => {
-        e.preventDefault();
-    
-        const formFields = Object.keys(formValues);
-        let newFormValues = {...formValues}
-    
-        for (let index = 0; index < formFields.length; index++) {
-          const currentField = formFields[index];
-          const currentValue = formValues[currentField].value;
-    
-          if(currentValue === ''){
-            newFormValues = {
-              ...newFormValues,
-              [currentField]:{
-                ...newFormValues[currentField],
-                error:true
-              }
-            }
-          }
-    
-        }
-    
-        setFormValues(newFormValues)
-      }
-
+    setFormValues(newFormValues);
+  };
 
   return (
-    <Fragment >
+    <Fragment>
       <CssBaseline />
-    <Box style={{"padding-top":"50px"}} >
-    <Container  >
-      <form noValidate onSubmit={handleSubmit} >
-          <Typography 
-            variant="h6">
-             Hi {}
-          </Typography>
+      <Box style={{ "padding-top": "50px" }}>
+        <Container>
+          <form noValidate onSubmit={handleSubmit}>
+            <Typography variant="h6" style={{ "margin-top": "50px" }}>Hi {userDataFromStorage?.name}</Typography>
 
-          <TextField 
-          style={{"padding-top":"50px"}}
-            placeholder="Enter your name"
-            label="Name"
-            name="name"
-            variant="outlined"
-            fullWidth
-            required
-            value={formValues.name.value}
-            onChange={handleChange}
-            error={formValues.name.error}
-            helperText={formValues.name.error && formValues.name.errorMessage}
-          />
-
-          <TextField 
-          style={{"padding-top":"50px"}}
-            placeholder="Enter your userId"
-            label="User ID"
-            name="userId"
-            variant="outlined"
-            fullWidth
-            required
-            type="text"
-            value={formValues.userId.value}
-            onChange={handleChange}
-            error={formValues.userId.error}
-            helperText={formValues.userId.error && formValues.userId.errorMessage}
+            <TextField
+              placeholder="Enter your name"
+              label="Name"
+              name="name"
+              variant="outlined"
+              fullWidth
+              required
+              value={formValues.name.value}
+              onChange={handleChange}
+              error={formValues.name.error}
+              helperText={formValues.name.error && formValues.name.errorMessage}
             />
 
-          <TextField 
-          style={{"padding-top":"50px"}}
-            placeholder="Describe the best tech stack you worked with and you like most?"
-            label="Email"
-            name="email"
-            variant="outlined"
-            fullWidth
-            required
-            value={formValues.email.value}
-            multiline
-            rows={4}
-            type="email"
-            onChange={handleChange}
-            error={formValues.email.error}
-            helperText={formValues.email.error && formValues.email.errorMessage}
-          />
+            <TextField
+              style={{ "margin-top": "50px" }}
+              placeholder="Enter your userId"
+              label="User ID"
+              name="userId"
+              variant="outlined"
+              fullWidth
+              required
+              type="text"
+              value={formValues.userId.value}
+              onChange={handleChange}
+              error={formValues.userId.error}
+              helperText={
+                formValues.userId.error && formValues.userId.errorMessage
+              }
+            />
 
-          <FormControl >
-            <FormLabel>User Type</FormLabel>
-            <RadioGroup name="usertype" value={formValues.userType.value} onChange={handleChange}
-            style={{"padding-top":"50px"}} >
-              <FormControlLabel value="ADMIN" control={<Radio />} label="Admin" />
-              <FormControlLabel value="CUSTOMER" control={<Radio />} label="Customer" />
-              <FormControlLabel value="ENGINEER" control={<Radio />} label="Engineer" />
-            </RadioGroup>
-          </FormControl>
+            <TextField
+              style={{ "margin-top": "50px" }}
+              placeholder="Describe the best tech stack you worked with and you like most?"
+              label="Email"
+              name="email"
+              variant="outlined"
+              fullWidth
+              required
+              value={formValues.email.value}
+              multiline
+              rows={4}
+              type="email"
+              onChange={handleChange}
+              error={formValues.email.error}
+              helperText={
+                formValues.email.error && formValues.email.errorMessage
+              }
+            />
+
+            <FormControl>
+              <FormLabel>User Type</FormLabel>
+              <RadioGroup
+                name="userTypes"
+                value={formValues.userTypes.value}
+                onChange={handleChange}
+                style={{ "padding-top": "50px" }}
+              >
+                <FormControlLabel
+                  value="ADMIN"
+                  control={<Radio />}
+                  label="Admin"
+                />
+                <FormControlLabel
+                  value="CUSTOMER"
+                  control={<Radio />}
+                  label="Customer"
+                />
+                <FormControlLabel
+                  value="ENGINEER"
+                  control={<Radio />}
+                  label="Engineer"
+                />
+              </RadioGroup>
+            </FormControl>
             <br></br>
-          <Button
-            type="submit"
-            variant="outlined"
-            color="secondary"
-            endIcon={<KeyboardArrowRight />}
-          >
+            <Button
+            disabled={formValues.name.value==='' || formValues.userId.value==='' || formValues.email.value==='' }
+              type="submit"
+              variant="outlined"
+              color="secondary"
+              onClick={updateProfile}
+              endIcon={<KeyboardArrowRight />}
+            >
               Update
-          </Button>
-      </form>
-    </Container>
-    </Box>
+            </Button>
+          </form>
+        </Container>
+      </Box>
     </Fragment>
   );
 }
