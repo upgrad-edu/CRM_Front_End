@@ -20,25 +20,8 @@ export function Profile() {
   const [UserData, setUserData] = useState(null);
   useEffect(() => {
     setUserData(userDataFromStorage);
-    if (userIdfromStorage != null) {
-      fetch(userBasedonUserId+`${userIdfromStorage}`)
-        .then((res) => res.json())
-        .then(
-          (result) => {
-            // if(result.length>0)
-            // setTicketsData(result)
-            // else
-            setUserData(result);
-          },
-          // Note: it's important to handle errors here
-          // instead of a catch() block so that we don't swallow
-          // exceptions from actual bugs in components.
-          (error) => {
-            setUserData(null);
-            alert("Some Error while fetching the details");
-          }
-        );
-    } else alert("please login to fetch details and refresh the page");
+    if (userIdfromStorage == null)
+    alert("please login to fetch details and refresh the page");
   }, []);
 
   const updateProfile = () => {
