@@ -9,7 +9,10 @@ import {
   FormLabel,
   RadioGroup,
   Radio,
-  FormControlLabel
+  FormControlLabel,
+  InputLabel,
+  Select,
+  MenuItem
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -27,13 +30,26 @@ export default function Popup({
   const [isRegister, setIsRegister] = useState(false);
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
+  const [ticketPriority, setTicketPriority] = useState(0);
+  const [status, setStatus] = useState("OPEN");
   const [description, setDescription] = useState("");
   const [userTypes, setUserTypes] = useState("");
+  const [userData, setUserData] = useState(null);
+  const [assignee, setAssignee ] = useState(null);
   console.log(selectedTicket);
   useEffect(() => {
+    setUserData(JSON.parse(localStorage.getItem("userData")));
     if (selectedTicket != null) {
       setTitle(selectedTicket.title);
       setDescription(selectedTicket.description);
+      setStatus(selectedTicket.status);
+      setTicketPriority(selectedTicket.ticketPriority);
+    }
+    else{
+      setTitle('');
+      setDescription('');
+      setStatus('');
+      setTicketPriority('');
     }
   }, [selectedTicket]);
 
@@ -42,12 +58,9 @@ export default function Popup({
       open={openLogin}
       onClose={() => {
         setIsRegister(false);
-        setTitle('');
-        setDescription('');
         setEmail('');
         setName('');
         setPassword('');
-        setUserId('');
         handleLoginClose({ actionType: "close" });
       }}
     >
@@ -200,6 +213,60 @@ export default function Popup({
                 multiline
                 onChange={(event) => setDescription(event.target.value)}
               />
+              {type==="updateTicket" && <TextField
+                  autoFocus
+                  required
+                  error={ticketPriority === ""}
+                  margin="dense"
+                  id="ticketPriority"
+                  label="Ticket Priority"
+                  type="number"
+                  fullWidth
+                  value={ticketPriority}
+                  variant="standard"
+                  onChange={(event) => setTicketPriority(event.target.value)}
+                />}
+             {type==="updateTicket" && <FormControl>
+                      <FormLabel id="demo-radio-buttons-group-label">
+                        Status
+                      </FormLabel>
+                      <RadioGroup
+                        row
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        defaultValue=""
+                        name="radio-buttons-group"
+                        value={status}
+                        onChange={(event) =>
+                          setStatus(event.target.value)
+                        }
+                      >
+                        <FormControlLabel
+                          value="OPEN"
+                          control={<Radio />}
+                          label="OPEN"
+                        />
+                        <FormControlLabel
+                          value="CLOSED"
+                          control={<Radio />}
+                          label="CLOSED"
+                        />
+                      </RadioGroup>
+                    </FormControl>}
+                    {type==="updateTicket" && userData?.userTypes==="ENGINEER" && <FormControl fullWidth>
+  <InputLabel id="assignee-label">Assignee</InputLabel>
+  <Select
+    labelId="assignee-label"
+    id="assignee"
+    value={assignee}
+    label="Assignee"
+    onChange={(event)=>setAssignee(event.target.value)}
+  >
+    <MenuItem value={10}>Ten</MenuItem>
+    <MenuItem value={20}>Twenty</MenuItem>
+    <MenuItem value={30}>Thirty</MenuItem>
+  </Select>
+</FormControl>
+                    }
             </DialogContent>
             <DialogActions>
               <Button
@@ -210,6 +277,9 @@ export default function Popup({
                       type === "createTicket" ? "createTicket" : "updateTicket",
                     title: title,
                     description: description,
+                    id:selectedTicket.id,
+                    ticketPriority: ticketPriority,
+                    status: status
                   })
                 }
               >

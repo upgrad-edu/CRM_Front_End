@@ -25,7 +25,8 @@ export function Profile() {
   }, []);
 
   const updateProfile = () => {
-    const profileData = {
+    if(userDataFromStorage!==null){
+        const profileData = {
         name: formValues.name.value,
         userId: formValues.userId.value,
        email: formValues.email.value,
@@ -36,6 +37,7 @@ export function Profile() {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        "x-access-token":userDataFromStorage.accessToken
       },
       body: JSON.stringify(profileData),
     })
@@ -46,7 +48,9 @@ export function Profile() {
       })
       .catch((error) => {
         console.error("Error:", error);
-      });
+      });}
+      else
+      alert('please login first and refresh the page')
   };
 
   const [formValues, setFormValues] = useState({

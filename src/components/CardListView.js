@@ -41,6 +41,9 @@ export default function ImgMediaCard({
               {data.description || data.email}
             </p>
             <p>Status: {data.status || data.userStatus}</p>
+            {data?.reporter && <span>Reporter: {data.reporter }&nbsp;&nbsp;&nbsp;</span>}
+            {data?.assignee && <span>Assignee: {data.assignee }</span>}
+
           </div>
         }
       />

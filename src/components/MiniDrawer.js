@@ -46,6 +46,7 @@ import {
   getTicketData,
   signin,
   signup,
+  updateTicketById,
 } from "../constants";
 
 const drawerWidth = 240;
@@ -148,6 +149,7 @@ export default function MiniDrawer() {
         method: "POST", // or 'PUT'
         headers: {
           "Content-Type": "application/json",
+          "x-access-token":userData?.accessToken
         },
         body: JSON.stringify(ticketData),
       })
@@ -159,11 +161,12 @@ export default function MiniDrawer() {
           console.error("Error:", error);
         });
     } else if (data.actionType === "updateTicket") {
-      const ticketData = { title: data.title, description: data.description };
-      fetch(createNewTicket, {
-        method: "POST", // or 'PUT'
+      const ticketData = { title: data.title, description: data.description,ticketPriority:data.ticketPriority,status:data.status };
+      fetch(updateTicketById+`${data.id}`, {
+        method: "PUT", // or 'PUT'
         headers: {
           "Content-Type": "application/json",
+          "x-access-token":userData?.accessToken
         },
         body: JSON.stringify(ticketData),
       })
@@ -252,7 +255,12 @@ export default function MiniDrawer() {
           }
         );
 
-      fetch(getAllUsers)
+      fetch(getAllUsers,{
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": UserData?.accessToken,
+        },
+      })
         .then((res) => res.json())
         .then(
           (result) => {
@@ -504,7 +512,7 @@ export default function MiniDrawer() {
                             />
                           );
                         })}
-                    <BasicTabs customerData={customersData} />
+                    {userData.userTypes==="ADMIN" && <BasicTabs customerData={customersData} />}
                   </React.Fragment>
                 }
               ></Route>
