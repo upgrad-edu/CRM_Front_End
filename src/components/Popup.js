@@ -1,3 +1,4 @@
+import { CloseFullscreenRounded, CloseOutlined } from "@mui/icons-material";
 import {
   Dialog,
   DialogActions,
@@ -31,30 +32,30 @@ export default function Popup({
   const [userId, setUserId] = useState("");
   const [isRegister, setIsRegister] = useState(false);
   const [name, setName] = useState("");
-  const [title, setTitle] = useState("");
-  const [ticketPriority, setTicketPriority] = useState(0);
-  const [status, setStatus] = useState("OPEN");
-  const [description, setDescription] = useState("");
-  const [userTypes, setUserTypes] = useState("");
+  const [title, setTitle] = useState(null);
+  const [ticketPriority, setTicketPriority] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [userTypes, setUserTypes] = useState(null);
   const [userData, setUserData] = useState(null);
   const [assignee, setAssignee ] = useState(null);
   const [customersData, setCustomersData] = useState(demoCustomerData);
   
   useEffect(() => {
     setUserData(JSON.parse(localStorage.getItem("userData")));
-    if(title!==selectedTicket.title || description!==selectedTicket.description || status!==selectedTicket.status || assignee!==selectedTicket.assignee || ticketPriority!==selectedTicket.ticketPriority ){
-      setTitle(selectedTicket.title);
-      setDescription(selectedTicket.description);
-      setStatus(selectedTicket.status);
-      setTicketPriority(selectedTicket.ticketPriority);
-      setAssignee(selectedTicket.assignee);
+    if(title!==selectedTicket?.title || description!==selectedTicket?.description || status!==selectedTicket?.status || assignee!==selectedTicket?.assignee || ticketPriority!==selectedTicket?.ticketPriority ){
+      setTitle(selectedTicket?.title);
+      setDescription(selectedTicket?.description);
+      setStatus(selectedTicket?.status);
+      setTicketPriority(selectedTicket?.ticketPriority);
+      setAssignee(selectedTicket?.assignee);
     }
     else if (selectedTicket != null) {
-      setTitle(selectedTicket.title);
-      setDescription(selectedTicket.description);
-      setStatus(selectedTicket.status);
-      setTicketPriority(selectedTicket.ticketPriority);
-      setAssignee(selectedTicket.assignee);
+      setTitle(selectedTicket?.title);
+      setDescription(selectedTicket?.description);
+      setStatus(selectedTicket?.status);
+      setTicketPriority(selectedTicket?.ticketPriority);
+      setAssignee(selectedTicket?.assignee);
     }
     else{
       setTitle('');
@@ -95,17 +96,16 @@ export default function Popup({
   return (
     <Dialog
       open={openLogin}
-      onClose={() => {
+    >
+      {type === "loginRegister" && (
+        <Fragment>
+          <DialogTitle>Login/Register{userData && userData.userId && <CloseOutlined style={{float:"right"}} onClick={() => {
         setIsRegister(false);
         setEmail('');
         setName('');
         setPassword('');
         handleLoginClose({ actionType: "close" });
-      }}
-    >
-      {type === "loginRegister" && (
-        <Fragment>
-          <DialogTitle>Login/Register</DialogTitle>
+      }}/>} </DialogTitle>
           <DialogContent>
             <DialogContentText>
               To do any operations please Login or Register
@@ -173,7 +173,6 @@ export default function Popup({
       >
         <FormControlLabel value="ENGINEER" control={<Radio />} label="Engineer" />
         <FormControlLabel value="CUSTOMER" control={<Radio />} label="Customer" />
-        <FormControlLabel value="ADMIN" control={<Radio />} label="Admin" />
       </RadioGroup>
     </FormControl>}
     <br></br>
@@ -224,6 +223,9 @@ export default function Popup({
             <DialogTitle>
               {" "}
               {type === "createTicket" ? "Create" : "Update"} Ticket
+              <CloseOutlined style={{float:"right"}}  onClick={() => {
+        handleLoginClose({ actionType: "close" });
+      }}/>
             </DialogTitle>
             <DialogContent>
               <DialogContentText>
@@ -291,7 +293,7 @@ export default function Popup({
                         />
                       </RadioGroup>
                     </FormControl>}
-                    {type==="updateTicket" && userData?.userTypes==="ENGINEER" && <FormControl fullWidth>
+                    {type==="updateTicket" && userData?.userTypes!=="CUSTOMER" && <FormControl fullWidth>
   <InputLabel id="assignee-label">Assignee</InputLabel>
   <Select
     labelId="assignee-label"
@@ -304,8 +306,7 @@ export default function Popup({
       return <MenuItem value={customer.userId}>{customer.userId}</MenuItem>
     })}
   </Select>
-</FormControl>
-                    }
+</FormControl>}
             </DialogContent>
             <DialogActions>
               <Button

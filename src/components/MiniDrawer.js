@@ -250,7 +250,7 @@ export default function MiniDrawer() {
           // instead of a catch() block so that we don't swallow
           // exceptions from actual bugs in components.
           (error) => {
-            setTicketsData(demoTicketData);
+            setTicketsData(demoTicketData.filter((ticket)=>ticket.status=="OPEN"));
             setisTicketsLoaded(true);
           }
         );
@@ -277,7 +277,9 @@ export default function MiniDrawer() {
             setisTicketsLoaded(true);
           }
         );
-    } else alert("please Login to get Tickets");
+    } else {
+      handlePopupOpen("loginRegister");
+    }
   }, []);
 
   return (
@@ -459,7 +461,7 @@ export default function MiniDrawer() {
                       <RadioGroup
                         row
                         aria-labelledby="demo-radio-buttons-group-label"
-                        defaultValue=""
+                        defaultValue="OPEN"
                         name="radio-buttons-group"
                         onChange={(event) =>
                           setStatusFilter(event.target.value)
@@ -512,7 +514,7 @@ export default function MiniDrawer() {
                             />
                           );
                         })}
-                    {userData.userTypes==="ADMIN" && <BasicTabs customerData={customersData} />}
+                    {userData?.userTypes==="ADMIN" && <BasicTabs customerData={customersData} />}
                   </React.Fragment>
                 }
               ></Route>
