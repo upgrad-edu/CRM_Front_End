@@ -3,16 +3,11 @@ import { CssBaseline } from "@mui/material";
 import { Fragment } from "react";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Button from "@mui/material/Button";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormLabel from "@mui/material/FormLabel";
 import { KeyboardArrowRight } from "@mui/icons-material";
-import FormControl from "@mui/material/FormControl";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { updateUserInfo, userBasedonUserId } from "../constants";
+import { updateUserInfo } from "../constants";
 
 export function Profile() {
   const userDataFromStorage = JSON.parse(localStorage.getItem("userData"));
@@ -21,36 +16,35 @@ export function Profile() {
   useEffect(() => {
     setUserData(userDataFromStorage);
     if (userIdfromStorage == null)
-    alert("please login to fetch details and refresh the page");
+      alert("please login to fetch details and refresh the page");
   }, []);
 
   const updateProfile = () => {
-    if(userDataFromStorage!==null){
-        const profileData = {
+    if (userDataFromStorage !== null) {
+      const profileData = {
         name: formValues.name.value,
         userId: formValues.userId.value,
-       email: formValues.email.value,
+        email: formValues.email.value,
         userTypes: formValues.userTypes.value,
-        userStatus: userDataFromStorage.userStatus
-}
-    fetch(updateUserInfo+`${userIdfromStorage}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "x-access-token":userDataFromStorage.accessToken
-      },
-      body: JSON.stringify(profileData),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log("Success:", result);
-        alert(result.message);
+        userStatus: userDataFromStorage.userStatus,
+      };
+      fetch(updateUserInfo + `${userIdfromStorage}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": userDataFromStorage.accessToken,
+        },
+        body: JSON.stringify(profileData),
       })
-      .catch((error) => {
-        console.error("Error:", error);
-      });}
-      else
-      alert('please login first and refresh the page')
+        .then((response) => response.json())
+        .then((result) => {
+          console.log("Success:", result);
+          alert(result.message);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    } else alert("please login first and refresh the page");
   };
 
   const [formValues, setFormValues] = useState({
@@ -117,7 +111,9 @@ export function Profile() {
       <Box style={{ "padding-top": "50px" }}>
         <Container>
           <form noValidate onSubmit={handleSubmit}>
-            <Typography variant="h6" style={{ "margin-top": "50px" }}>Hi {userDataFromStorage?.name}</Typography>
+            <Typography variant="h6" style={{ "margin-top": "50px" }}>
+              Hi {userDataFromStorage?.name}
+            </Typography>
 
             <TextField
               placeholder="Enter your name"
@@ -168,34 +164,13 @@ export function Profile() {
               }
             />
 
-            <FormControl>
-              <FormLabel>User Type</FormLabel>
-              <RadioGroup
-                name="userTypes"
-                value={formValues.userTypes.value}
-                onChange={handleChange}
-                style={{ "padding-top": "50px" }}
-              >
-                <FormControlLabel
-                  value="ADMIN"
-                  control={<Radio />}
-                  label="Admin"
-                />
-                <FormControlLabel
-                  value="CUSTOMER"
-                  control={<Radio />}
-                  label="Customer"
-                />
-                <FormControlLabel
-                  value="ENGINEER"
-                  control={<Radio />}
-                  label="Engineer"
-                />
-              </RadioGroup>
-            </FormControl>
             <br></br>
             <Button
-            disabled={formValues.name.value==='' || formValues.userId.value==='' || formValues.email.value==='' }
+              disabled={
+                formValues.name.value === "" ||
+                formValues.userId.value === "" ||
+                formValues.email.value === ""
+              }
               type="submit"
               variant="outlined"
               color="secondary"

@@ -4,10 +4,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import {
-  demoCustomerData,
-  demoTicketData,
-} from "../Demodata";
+import { demoCustomerData, demoTicketData } from "../Demodata";
 import ImgMediaCard from "./CardListView";
 
 export function TabPanel(props) {
@@ -69,6 +66,7 @@ export default function BasicTabs({ customerData }) {
           .map((customer, index) => {
             return (
               <ImgMediaCard
+                type="user"
                 key={customer.userId}
                 data={customer}
                 index={index}
@@ -82,6 +80,7 @@ export default function BasicTabs({ customerData }) {
           .map((customer, index) => {
             return (
               <ImgMediaCard
+                type="user"
                 key={customer.userId}
                 data={customer}
                 index={index}
@@ -91,7 +90,14 @@ export default function BasicTabs({ customerData }) {
       </TabPanel>
       <TabPanel value={value} index={2}>
         {demoTicketData.map((ticket, index) => {
-          return <ImgMediaCard key={ticket.id} data={ticket} index={index} />;
+          return (
+            <ImgMediaCard
+              type="ticket"
+              key={ticket.id}
+              data={ticket}
+              index={index}
+            />
+          );
         })}
       </TabPanel>
     </Box>

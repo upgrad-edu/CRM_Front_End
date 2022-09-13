@@ -19,6 +19,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ImgMediaCard from "./CardListView";
 import Login from "@mui/icons-material/Login";
+import Snackbar from "@mui/material/Snackbar";
 import { demoCustomerData, demoTicketData } from "../Demodata";
 import Popup from "./Popup";
 import { Dashboard } from "../pages/Dashbaord";
@@ -43,7 +44,6 @@ import {
   createNewTicket,
   getAllTickets,
   getAllUsers,
-  getTicketData,
   signin,
   signup,
   updateTicketById,
@@ -125,8 +125,10 @@ export default function MiniDrawer() {
   const [popupType, setPopupType] = useState("");
   const [selectedTicket, setSelectedTicket] = useState("");
   const [openLogin, setOpenLogin] = useState(false);
-  const [statusFilter, setStatusFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("OPEN");
   const [userData, setUserData] = useState({});
+  const [alertMessage, setAlertMessage] = useState("");
+  const [snackBarOpen, setSnackbarOpen] = useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -149,7 +151,7 @@ export default function MiniDrawer() {
         method: "POST", // or 'PUT'
         headers: {
           "Content-Type": "application/json",
-          "x-access-token":userData?.accessToken
+          "x-access-token": userData?.accessToken,
         },
         body: JSON.stringify(ticketData),
       })
@@ -161,12 +163,17 @@ export default function MiniDrawer() {
           console.error("Error:", error);
         });
     } else if (data.actionType === "updateTicket") {
-      const ticketData = { title: data.title, description: data.description,ticketPriority:data.ticketPriority,status:data.status };
-      fetch(updateTicketById+`${data.id}`, {
+      const ticketData = {
+        title: data.title,
+        description: data.description,
+        ticketPriority: data.ticketPriority,
+        status: data.status,
+      };
+      fetch(updateTicketById + `${data.id}`, {
         method: "PUT", // or 'PUT'
         headers: {
           "Content-Type": "application/json",
-          "x-access-token":userData?.accessToken
+          "x-access-token": userData?.accessToken,
         },
         body: JSON.stringify(ticketData),
       })
@@ -189,7 +196,8 @@ export default function MiniDrawer() {
         .then((response) => response.json())
         .then((data) => {
           console.log("Success:", data);
-          alert(`Login Successfull ${data.name}`);
+          setAlertMessage(`Login Successfull ${data.name}`);
+          setSnackbarOpen(true);
           localStorage.setItem("userData", JSON.stringify(data));
         })
         .catch((error) => {
@@ -213,13 +221,17 @@ export default function MiniDrawer() {
         .then((response) => response.json())
         .then((data) => {
           console.log("Success:", data);
-          alert(
+          setAlertMessage(
             `Registered Successfully ${data.name}, Please Login to Continue.`
           );
+          setSnackbarOpen(true);
         })
         .catch((error) => {
           console.error("Error:", error);
-          alert("Some error occured while registering. Please retry.");
+          setAlertMessage(
+            "Some error occured while registering. Please retry."
+          );
+          setSnackbarOpen(true);
         });
     }
     setPopupType("");
@@ -250,12 +262,14 @@ export default function MiniDrawer() {
           // instead of a catch() block so that we don't swallow
           // exceptions from actual bugs in components.
           (error) => {
-            setTicketsData(demoTicketData.filter((ticket)=>ticket.status=="OPEN"));
+            setTicketsData(
+              demoTicketData.filter((ticket) => ticket.status === "OPEN")
+            );
             setisTicketsLoaded(true);
           }
         );
 
-      fetch(getAllUsers,{
+      fetch(getAllUsers, {
         headers: {
           "Content-Type": "application/json",
           "x-access-token": UserData?.accessToken,
@@ -281,9 +295,17 @@ export default function MiniDrawer() {
       handlePopupOpen("loginRegister");
     }
   }, []);
-
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
   return (
     <Box sx={{ display: "flex" }}>
+      <Snackbar
+        open={snackBarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={alertMessage}
+      />
       <BrowserRouter>
         <Popup
           openLogin={openLogin}
@@ -489,6 +511,7 @@ export default function MiniDrawer() {
                         return (
                           <ImgMediaCard
                             key={ticket.id}
+                            type="ticket"
                             data={ticket}
                             index={index}
                             handlePopupOpen={handlePopupOpen}
@@ -506,6 +529,7 @@ export default function MiniDrawer() {
                             <ImgMediaCard
                               key={ticket.id}
                               data={ticket}
+                              type="ticket"
                               index={index}
                               handlePopupOpen={handlePopupOpen}
                               setSelectedTicketData={(ticketData) =>
@@ -514,7 +538,9 @@ export default function MiniDrawer() {
                             />
                           );
                         })}
-                    {userData?.userTypes==="ADMIN" && <BasicTabs customerData={customersData} />}
+                    {userData?.userTypes === "ADMIN" && (
+                      <BasicTabs customerData={customersData} />
+                    )}
                   </React.Fragment>
                 }
               ></Route>
