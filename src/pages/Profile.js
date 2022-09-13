@@ -7,16 +7,22 @@ import Button from "@mui/material/Button";
 import { KeyboardArrowRight } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Snackbar from "@mui/material/Snackbar";
 import { updateUserInfo } from "../constants";
 
 export function Profile() {
   const userDataFromStorage = JSON.parse(localStorage.getItem("userData"));
   const userIdfromStorage = userDataFromStorage?.userId;
   const [UserData, setUserData] = useState(null);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [snackBarOpen, setSnackbarOpen] = useState(false);
   useEffect(() => {
     setUserData(userDataFromStorage);
     if (userIdfromStorage == null)
-      alert("please login to fetch details and refresh the page");
+      setAlertMessage(
+        "please login to fetch details and refresh the page"
+      );
+      setSnackbarOpen(true);
   }, []);
 
   const updateProfile = () => {
@@ -39,12 +45,17 @@ export function Profile() {
         .then((response) => response.json())
         .then((result) => {
           console.log("Success:", result);
-          alert(result.message);
+          setAlertMessage(result.message);
+          setSnackbarOpen(true);
         })
         .catch((error) => {
           console.error("Error:", error);
         });
-    } else alert("please login first and refresh the page");
+    } else 
+    {
+     setAlertMessage("Please login first and refresh the page.");
+          setSnackbarOpen(true);
+    }
   };
 
   const [formValues, setFormValues] = useState({
@@ -104,11 +115,20 @@ export function Profile() {
 
     setFormValues(newFormValues);
   };
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   return (
     <Fragment>
       <CssBaseline />
       <Box style={{ "padding-top": "50px" }}>
+      <Snackbar
+        open={snackBarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={alertMessage}
+      />
         <Container>
           <form noValidate onSubmit={handleSubmit}>
             <Typography variant="h6" style={{ "margin-top": "50px" }}>
