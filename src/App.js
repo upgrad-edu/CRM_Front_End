@@ -8,7 +8,7 @@ function App() {
   return (
     <Fragment>
       <CssBaseline />
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" style={{backgroundColor:"#f4f4f4"}}>
         <MiniDrawer />
       </Container>
     </Fragment>
