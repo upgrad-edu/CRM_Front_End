@@ -314,7 +314,7 @@ export default function MiniDrawer() {
           selectedTicket={selectedTicket}
         />
         <CssBaseline />
-        <AppBar position="fixed" open={open}>
+        <AppBar className="App-header" position="fixed" open={open}>
           <Toolbar>
             <IconButton
               color="inherit"
@@ -369,6 +369,7 @@ export default function MiniDrawer() {
         </AppBar>
         <Drawer variant="permanent" open={open}>
           <DrawerHeader>
+            Welcome {userData.name}
             <IconButton onClick={handleDrawerClose}>
               {theme.direction === "rtl" ? (
                 <ChevronRightIcon />
@@ -390,7 +391,7 @@ export default function MiniDrawer() {
                 disablePadding
                 sx={{ display: "block" }}
               >
-                <Link to={text.url}>
+                <Link to={text.url} style={{textDecoration:"none", color:"#757575"}}>
                   <ListItemButton
                     sx={{
                       minHeight: 48,

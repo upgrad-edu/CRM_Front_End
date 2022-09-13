@@ -141,7 +141,7 @@ export default function Popup({
       });
   };
   return (
-    <Dialog style={{ backgroundColor: "#1976d2" }} open={openLogin}>
+    <Dialog style={{ background: "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)" }} open={openLogin}>
       {type === "loginRegister" && (
         <Fragment>
           <DialogTitle>

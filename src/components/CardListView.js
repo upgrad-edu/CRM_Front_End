@@ -1,12 +1,12 @@
 import React, { Fragment } from "react";
-import { Card, CardHeader, Avatar, IconButton } from "@mui/material";
-import { Close, Done } from "@mui/icons-material";
+import { Card, CardHeader, IconButton } from "@mui/material";
+import { Build, Close, Done, Person } from "@mui/icons-material";
 import { updateTicketById, updateUserInfo } from "../constants";
+import Tooltip from "@mui/material/Tooltip";
 
 export default function ImgMediaCard({
   type,
   data,
-  index,
   handlePopupOpen,
   setSelectedTicketData,
 }) {
@@ -63,34 +63,38 @@ export default function ImgMediaCard({
   };
 
   return (
-    <Card key={data.id}>
+    <Card key={data.id} style={{border:"1px solid #e3e3e3",margin:"4px"}}>
       <CardHeader
-        avatar={<Avatar aria-label={data.id}>{index + 1}</Avatar>}
+        avatar={type==="ticket" ? <Build/>:<Person/>}
         action={
           <Fragment>
             {((type === "user" && data.userStatus === "PENDING") ||
               (type === "ticket" && data.assignee === "")) && (
+                <Tooltip title= {type==="ticket"? "Accept":"Approve"}>
               <IconButton
                 aria-label="settings"
                 //disabled={(type==="user" && data.userStatus==="APPROVED") || (type==="ticket" && data.assignee)}
                 onClick={() => updateTicketorUser("APPROVED")}
               >
-                <Done />
+                <Done color="primary"/>
               </IconButton>
+              </Tooltip>
             )}
             {((type === "user" && data.userStatus === "PENDING") ||
               (type === "ticket" && data.assignee === "")) && (
+                <Tooltip title= "Decline">
               <IconButton
                 aria-label="settings"
                 // disabled={(type==="user" && data.userStatus==="APPROVED") || (type==="ticket" && data.assignee)}
                 onClick={() => updateTicketorUser("DECLINED")}
               >
-                <Close />
+                <Close  color="error"/>
               </IconButton>
+              </Tooltip>
             )}
           </Fragment>
         }
-        title={data.title || data.name}
+        title={<h2>{data.title || data.name}</h2>}
         subheader={
           <div
             onClick={() => {
@@ -100,7 +104,7 @@ export default function ImgMediaCard({
               }
             }}
           >
-            <p
+            <h4
               style={{
                 maxWidth: "60vw",
                 overflow: "hidden",
@@ -108,12 +112,12 @@ export default function ImgMediaCard({
               }}
             >
               {data.description || data.email}
-            </p>
-            <p>Status: {data.status || data.userStatus}</p>
+            </h4>
+            <p>Status:<strong>{data.status || data.userStatus}</strong> </p>
             {data?.reporter && (
-              <span>Reporter: {data.reporter}&nbsp;&nbsp;&nbsp;</span>
+              <span>Reporter:<strong> {data.reporter}</strong>&nbsp;&nbsp;&nbsp;</span>
             )}
-            {data?.assignee && <span>Assignee: {data.assignee}</span>}
+            {data?.assignee && <span>Assignee:<strong> {data.assignee}</strong></span>}
           </div>
         }
       />
