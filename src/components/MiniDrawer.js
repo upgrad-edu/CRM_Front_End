@@ -221,7 +221,7 @@ export default function MiniDrawer() {
         password: data.password,
         name: data.name,
         email: data.email,
-        userTypes: data.userTypes,
+        userType: data.userTypes,
       };
       fetch(signup, {
         method: "POST", // or 'PUT'
