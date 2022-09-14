@@ -200,7 +200,7 @@ export default function MiniDrawer() {
           setSnackbarOpen(true);
           localStorage.setItem("userData", JSON.stringify(data));
           setPopupType("");
-    setOpenLogin(false);
+          setOpenLogin(false);
         })
         .catch((error) => {
           setSnackbarOpen(true);
@@ -237,7 +237,6 @@ export default function MiniDrawer() {
           setSnackbarOpen(true);
         });
     }
-    
   };
 
   useEffect(() => {
@@ -393,7 +392,10 @@ export default function MiniDrawer() {
                 disablePadding
                 sx={{ display: "block" }}
               >
-                <Link to={text.url} style={{textDecoration:"none", color:"#757575"}}>
+                <Link
+                  to={text.url}
+                  style={{ textDecoration: "none", color: "#757575" }}
+                >
                   <ListItemButton
                     sx={{
                       minHeight: 48,

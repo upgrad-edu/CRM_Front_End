@@ -63,33 +63,33 @@ export default function ImgMediaCard({
   };
 
   return (
-    <Card key={data.id} style={{border:"1px solid #e3e3e3",margin:"4px"}}>
+    <Card key={data.id} style={{ border: "1px solid #e3e3e3", margin: "4px" }}>
       <CardHeader
-        avatar={type==="ticket" ? <Build/>:<Person/>}
+        avatar={type === "ticket" ? <Build /> : <Person />}
         action={
           <Fragment>
             {((type === "user" && data.userStatus === "PENDING") ||
               (type === "ticket" && data.assignee === "")) && (
-                <Tooltip title= {type==="ticket"? "Accept":"Approve"}>
-              <IconButton
-                aria-label="settings"
-                //disabled={(type==="user" && data.userStatus==="APPROVED") || (type==="ticket" && data.assignee)}
-                onClick={() => updateTicketorUser("APPROVED")}
-              >
-                <Done color="primary"/>
-              </IconButton>
+              <Tooltip title={type === "ticket" ? "Accept" : "Approve"}>
+                <IconButton
+                  aria-label="settings"
+                  //disabled={(type==="user" && data.userStatus==="APPROVED") || (type==="ticket" && data.assignee)}
+                  onClick={() => updateTicketorUser("APPROVED")}
+                >
+                  <Done color="primary" />
+                </IconButton>
               </Tooltip>
             )}
             {((type === "user" && data.userStatus === "PENDING") ||
               (type === "ticket" && data.assignee === "")) && (
-                <Tooltip title= "Decline">
-              <IconButton
-                aria-label="settings"
-                // disabled={(type==="user" && data.userStatus==="APPROVED") || (type==="ticket" && data.assignee)}
-                onClick={() => updateTicketorUser("DECLINED")}
-              >
-                <Close  color="error"/>
-              </IconButton>
+              <Tooltip title="Decline">
+                <IconButton
+                  aria-label="settings"
+                  // disabled={(type==="user" && data.userStatus==="APPROVED") || (type==="ticket" && data.assignee)}
+                  onClick={() => updateTicketorUser("DECLINED")}
+                >
+                  <Close color="error" />
+                </IconButton>
               </Tooltip>
             )}
           </Fragment>
@@ -113,11 +113,19 @@ export default function ImgMediaCard({
             >
               {data.description || data.email}
             </h4>
-            <p>Status:<strong>{data.status || data.userStatus}</strong> </p>
+            <p>
+              Status:<strong>{data.status || data.userStatus}</strong>{" "}
+            </p>
             {data?.reporter && (
-              <span>Reporter:<strong> {data.reporter}</strong>&nbsp;&nbsp;&nbsp;</span>
+              <span>
+                Reporter:<strong> {data.reporter}</strong>&nbsp;&nbsp;&nbsp;
+              </span>
             )}
-            {data?.assignee && <span>Assignee:<strong> {data.assignee}</strong></span>}
+            {data?.assignee && (
+              <span>
+                Assignee:<strong> {data.assignee}</strong>
+              </span>
+            )}
           </div>
         }
       />

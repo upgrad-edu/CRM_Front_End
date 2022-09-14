@@ -19,10 +19,8 @@ export function Profile() {
   useEffect(() => {
     setUserData(userDataFromStorage);
     if (userIdfromStorage == null)
-      setAlertMessage(
-        "please login to fetch details and refresh the page"
-      );
-      setSnackbarOpen(true);
+      setAlertMessage("please login to fetch details and refresh the page");
+    setSnackbarOpen(true);
   }, []);
 
   const updateProfile = () => {
@@ -51,10 +49,9 @@ export function Profile() {
         .catch((error) => {
           console.error("Error:", error);
         });
-    } else 
-    {
-     setAlertMessage("Please login first and refresh the page.");
-          setSnackbarOpen(true);
+    } else {
+      setAlertMessage("Please login first and refresh the page.");
+      setSnackbarOpen(true);
     }
   };
 
@@ -123,12 +120,12 @@ export function Profile() {
     <Fragment>
       <CssBaseline />
       <Box style={{ "padding-top": "50px" }}>
-      <Snackbar
-        open={snackBarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        message={alertMessage}
-      />
+        <Snackbar
+          open={snackBarOpen}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+          message={alertMessage}
+        />
         <Container>
           <form noValidate onSubmit={handleSubmit}>
             <Typography variant="h6" style={{ "margin-top": "50px" }}>
