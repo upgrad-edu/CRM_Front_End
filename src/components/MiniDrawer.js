@@ -446,33 +446,8 @@ export default function MiniDrawer() {
           </List>
         </Drawer>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          {/* <DrawerHeader />
-        {ticketsData.map((ticket, index) => {
-          return (
-            <ImgMediaCard
-              key={ticket.id}
-              data={ticket}
-              index={index}
-              handlePopupOpen={handlePopupOpen}
-              setSelectedTicketData={(ticketData) =>
-                setSelectedTicket(ticketData)
-              }
-            />
-          );
-        })}
-        <BasicTabs customerData={customersData} /> */}
-
           <div>
             <hr />
-
-            {/*
-          A <Switch> looks through all its children <Route>
-          elements and renders the first one whose path
-          matches the current URL. Use a <Switch> any time
-          you have multiple routes, but you want only one
-          of them to render at a time
-        */}
-
             <Routes>
               <Route
                 path="/"
