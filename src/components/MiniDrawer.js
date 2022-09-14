@@ -199,9 +199,12 @@ export default function MiniDrawer() {
           setAlertMessage(`Login Successfull ${data.name}`);
           setSnackbarOpen(true);
           localStorage.setItem("userData", JSON.stringify(data));
+          setPopupType("");
+    setOpenLogin(false);
         })
         .catch((error) => {
-          console.error("Error:", error);
+          setSnackbarOpen(true);
+          setAlertMessage(`Login failed. Please check your id,password`);
         });
     } else if (data.actionType === "register") {
       const signupdetails = {
@@ -222,7 +225,7 @@ export default function MiniDrawer() {
         .then((data) => {
           console.log("Success:", data);
           setAlertMessage(
-            `Registered Successfully ${data.name}, Please Login to Continue.`
+            `Registered Successfully ${data.name}, Please Refresh and Login to Continue.`
           );
           setSnackbarOpen(true);
         })
@@ -234,8 +237,7 @@ export default function MiniDrawer() {
           setSnackbarOpen(true);
         });
     }
-    setPopupType("");
-    setOpenLogin(false);
+    
   };
 
   useEffect(() => {
