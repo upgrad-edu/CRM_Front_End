@@ -369,7 +369,7 @@ export default function MiniDrawer() {
         </AppBar>
         <Drawer variant="permanent" open={open}>
           <DrawerHeader>
-            Welcome {userData.name}
+            Welcome {userData?.name}
             <IconButton onClick={handleDrawerClose}>
               {theme.direction === "rtl" ? (
                 <ChevronRightIcon />
