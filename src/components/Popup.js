@@ -49,7 +49,7 @@ export default function Popup({
   const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
-    setUserData(JSON.parse(localStorage.getItem("userData")));
+    setUserData(JSON.parse(sessionStorage.getItem("userData")));
     if (
       title !== selectedTicket?.title ||
       description !== selectedTicket?.description ||
@@ -461,7 +461,7 @@ export default function Popup({
                     type === "createTicket" ? "createTicket" : "updateTicket",
                   title: title,
                   description: description,
-                  id: selectedTicket.id,
+                  id: selectedTicket?.id,
                   ticketPriority: ticketPriority,
                   status: status,
                 })

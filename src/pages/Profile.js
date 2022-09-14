@@ -11,7 +11,7 @@ import Snackbar from "@mui/material/Snackbar";
 import { updateUserInfo } from "../constants";
 
 export function Profile() {
-  const userDataFromStorage = JSON.parse(localStorage.getItem("userData"));
+  const userDataFromStorage = JSON.parse(sessionStorage.getItem("userData"));
   const userIdfromStorage = userDataFromStorage?.userId;
   const [UserData, setUserData] = useState(null);
   const [alertMessage, setAlertMessage] = useState("");

@@ -10,7 +10,7 @@ export default function ImgMediaCard({
   handlePopupOpen,
   setSelectedTicketData,
 }) {
-  const userDataFromStorage = JSON.parse(localStorage.getItem("userData"));
+  const userDataFromStorage = JSON.parse(sessionStorage.getItem("userData"));
 
   const updateTicketorUser = (status) => {
     if (type === "user") {

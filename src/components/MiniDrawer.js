@@ -205,7 +205,7 @@ export default function MiniDrawer() {
             setSnackbarOpen(true);
           }
           else{
-          localStorage.setItem("userData", JSON.stringify(data));
+          sessionStorage.setItem("userData", JSON.stringify(data));
           setPopupType("");
           setOpenLogin(false);
         }
@@ -249,7 +249,7 @@ export default function MiniDrawer() {
   };
 
   useEffect(() => {
-    const UserData = JSON.parse(localStorage.getItem("userData"));
+    const UserData = JSON.parse(sessionStorage.getItem("userData"));
     setUserData(UserData);
     if (UserData) {
       fetch(getAllTickets, {
