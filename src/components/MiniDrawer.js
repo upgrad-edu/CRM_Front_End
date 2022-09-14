@@ -145,6 +145,10 @@ export default function MiniDrawer() {
 
   const handlePopupClose = (data) => {
     console.log(data);
+    if(data.actionType==="close"){
+      setPopupType("");
+          setOpenLogin(false);
+    }
     if (data.actionType === "createTicket") {
       const ticketData = { title: data.title, description: data.description };
       fetch(createNewTicket, {
