@@ -196,15 +196,20 @@ export default function MiniDrawer() {
         .then((response) => response.json())
         .then((data) => {
           console.log("Success:", data);
-          setAlertMessage(`Login Successfull ${data.name}`);
-          setSnackbarOpen(true);
+          if(!data.name){
+            setAlertMessage(data.message);
+            setSnackbarOpen(true);
+          }
+          else{
           localStorage.setItem("userData", JSON.stringify(data));
           setPopupType("");
           setOpenLogin(false);
+        }
         })
         .catch((error) => {
           setSnackbarOpen(true);
-          setAlertMessage(`Login failed. Please check your id,password`);
+          console.log(error);
+          setAlertMessage(`Some error occured. Please retry`);
         });
     } else if (data.actionType === "register") {
       const signupdetails = {
