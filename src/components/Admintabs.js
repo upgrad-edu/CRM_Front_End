@@ -75,7 +75,7 @@ export default function BasicTabs({ customerData }) {
           })}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        {demoCustomerData
+        {customerData
           .filter((customer) => customer.userTypes === "ENGINEER")
           .map((customer, index) => {
             return (

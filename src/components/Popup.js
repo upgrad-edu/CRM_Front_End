@@ -392,7 +392,7 @@ export default function Popup({
                 >
                   {customersData.map((customer) => {
                     return (
-                      <MenuItem value={customer.userId}>
+                      <MenuItem key={customer.userId} value={customer.userId}>
                         {customer.userId}
                       </MenuItem>
                     );

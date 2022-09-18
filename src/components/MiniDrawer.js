@@ -126,7 +126,7 @@ export default function MiniDrawer() {
   const [selectedTicket, setSelectedTicket] = useState("");
   const [openLogin, setOpenLogin] = useState(false);
   const [statusFilter, setStatusFilter] = useState("OPEN");
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState(null);
   const [alertMessage, setAlertMessage] = useState("");
   const [snackBarOpen, setSnackbarOpen] = useState(false);
 
@@ -144,6 +144,7 @@ export default function MiniDrawer() {
   };
 
   const handlePopupClose = (data) => {
+    const UserLoginInfo = JSON.parse(sessionStorage.getItem("userData"));
     console.log(data);
     if(data.actionType==="close"){
       setPopupType("");
@@ -155,13 +156,23 @@ export default function MiniDrawer() {
         method: "POST", // or 'PUT'
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": userData?.accessToken,
+          "x-access-token": UserLoginInfo?.accessToken,
         },
         body: JSON.stringify(ticketData),
       })
         .then((response) => response.json())
         .then((data) => {
           console.log("Success:", data);
+          if(!data.id){
+            setAlertMessage(data.message);
+            setSnackbarOpen(true);
+          }
+          else{
+            setAlertMessage(`Ticket created with id ${data.id}`);
+         
+        }
+        setPopupType("");
+        setOpenLogin(false);
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -177,7 +188,7 @@ export default function MiniDrawer() {
         method: "PUT", // or 'PUT'
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": userData?.accessToken,
+          "x-access-token": UserLoginInfo?.accessToken,
         },
         body: JSON.stringify(ticketData),
       })
@@ -206,6 +217,7 @@ export default function MiniDrawer() {
           }
           else{
           sessionStorage.setItem("userData", JSON.stringify(data));
+          setUserData(data);
           setPopupType("");
           setOpenLogin(false);
         }
@@ -233,10 +245,16 @@ export default function MiniDrawer() {
         .then((response) => response.json())
         .then((data) => {
           console.log("Success:", data);
-          setAlertMessage(
-            `Registered Successfully ${data.name}, Please Refresh and Login to Continue.`
-          );
+          if(!data.name){
+            setAlertMessage(data.message);
+            setSnackbarOpen(true);
+          }
+          else{
+            setAlertMessage(
+              `Registered Successfully ${data.name}, Please Refresh and Login to Continue.`
+            );
           setSnackbarOpen(true);
+        }
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -249,21 +267,20 @@ export default function MiniDrawer() {
   };
 
   useEffect(() => {
-    const UserData = JSON.parse(sessionStorage.getItem("userData"));
-    setUserData(UserData);
-    if (UserData) {
+    // const UserData = JSON.parse(sessionStorage.getItem("userData"));
+    if (userData!==null) {
       fetch(getAllTickets, {
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": UserData?.accessToken,
+          "x-access-token": userData?.accessToken,
         },
       })
         .then((res) => res.json())
         .then(
           (result) => {
-            // if(result.length>0)
-            // setTicketsData(result)
-            // else
+            if(result.length>0)
+            setTicketsData(result)
+            else
             setTicketsData(demoTicketData);
 
             setisTicketsLoaded(true);
@@ -279,10 +296,11 @@ export default function MiniDrawer() {
           }
         );
 
+        if(userData.userTypes==="ADMIN"){
       fetch(getAllUsers, {
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": UserData?.accessToken,
+          "x-access-token": userData?.accessToken,
         },
       })
         .then((res) => res.json())
@@ -301,10 +319,11 @@ export default function MiniDrawer() {
             setisTicketsLoaded(true);
           }
         );
+    }
     } else {
       handlePopupOpen("loginRegister");
     }
-  }, []);
+  }, [userData]);
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
