@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Card, CardHeader, IconButton } from "@mui/material";
 import { Build, Close, Done, Person } from "@mui/icons-material";
 import { updateTicketById, updateUserInfo } from "../constants";
@@ -9,8 +9,16 @@ export default function ImgMediaCard({
   data,
   handlePopupOpen,
   setSelectedTicketData,
+  setAlertMessageData
 }) {
+  //const [alertMessage,setAlertMessage] = useState(null);
   const userDataFromStorage = JSON.parse(sessionStorage.getItem("userData"));
+
+  // useEffect(()=>{
+  //   if(alertMessage!=null){
+  //     setAlertMessageData(alertMessage);
+  //   }
+  // },[alertMessage])
 
   const updateTicketorUser = (status) => {
       const userData = {
@@ -21,7 +29,7 @@ export default function ImgMediaCard({
         userStatus: status,
       };
       fetch(updateUserInfo + `${data.userId}`, {
-        method: "POST", // or 'PUT'
+        method: "PUT", // or 'PUT'
         headers: {
           "Content-Type": "application/json",
           "x-access-token": userDataFromStorage?.accessToken,
@@ -31,9 +39,11 @@ export default function ImgMediaCard({
         .then((response) => response.json())
         .then((data) => {
           console.log("Success:", data);
+          setAlertMessageData(data.message);
         })
         .catch((error) => {
           console.error("Error:", error);
+          setAlertMessageData(error)
         });
   };
 
