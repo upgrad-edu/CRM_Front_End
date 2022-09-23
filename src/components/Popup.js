@@ -86,7 +86,7 @@ export default function Popup({
         .then(
           (result) => {
             if (result.length > 0) setCommentsData(result);
-            else setCommentsData(demoComments);
+            // else setCommentsData(demoComments);
           },
           // Note: it's important to handle errors here
           // instead of a catch() block so that we don't swallow
@@ -134,10 +134,12 @@ export default function Popup({
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
-        setCommentsData(...commentData, data);
+        setCommentsData([...commentsData, data]);
+        setNewComment("");
       })
       .catch((error) => {
         console.error("Error:", error);
+        setNewComment("");
       });
   };
   return (

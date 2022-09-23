@@ -278,11 +278,7 @@ export default function MiniDrawer() {
         .then((res) => res.json())
         .then(
           (result) => {
-            if(result.length>0)
             setTicketsData(result)
-            else
-            setTicketsData(demoTicketData);
-
             setisTicketsLoaded(true);
           },
           // Note: it's important to handle errors here
@@ -547,13 +543,18 @@ export default function MiniDrawer() {
                           );
                         })}
                     {userData?.userTypes === "ADMIN" && (
-                      <BasicTabs customerData={customersData} />
+                      <BasicTabs customerData={customersData} 
+                      setAlertMessageData = {(message)=>{
+                        setAlertMessage(message);
+                        setSnackbarOpen(true);
+                      }}
+                      />
                     )}
                   </React.Fragment>
                 }
               ></Route>
               <Route path="/profile" element={<Profile />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard userData = {userData} openTicketsCount={ticketsData.filter((ticket)=>ticket.status==="OPEN").length} closedTicketsCount={ticketsData.filter((ticket)=>ticket.status==="CLOSED").length}/>} />
             </Routes>
           </div>
         </Box>

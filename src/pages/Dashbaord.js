@@ -8,17 +8,15 @@ import { CssBaseline } from "@mui/material";
 import { Fragment } from "react";
 import gradient from "../assets/gradient.png";
 import { Link } from "react-router-dom";
-export function Dashboard() {
+export function Dashboard({userData,openTicketsCount,closedTicketsCount}) {
   return (
     <Fragment>
       <CssBaseline />
       <Link to="/">
         {" "}
-        <ActionAreaCard title="Open Requests" description="12"></ActionAreaCard>
+        <ActionAreaCard title="Open Requests" description={openTicketsCount}></ActionAreaCard>
       </Link>
-      <ActionAreaCard title="Closed Requests" description="2" />
-      <ActionAreaCard title="Accepted Requests" description="10" />
-      <ActionAreaCard title="Denied Requests" description="0" />
+      <ActionAreaCard title="Closed Requests" description={closedTicketsCount} />
     </Fragment>
   );
 }
