@@ -31,7 +31,7 @@ export default function Popup({
   type,
   selectedTicket,
   setAlertMessageData,
-  customerData
+  customerData,
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,7 +45,6 @@ export default function Popup({
   const [userTypes, setUserTypes] = useState("CUSTOMER");
   const [userData, setUserData] = useState(sessionStorage.getItem("userData"));
   const [assignee, setAssignee] = useState(null);
-  const [customersData, setCustomersData] = useState(customerData);
   const [commentsData, setCommentsData] = useState([]);
   const [newComment, setNewComment] = useState("");
 
@@ -85,12 +84,8 @@ export default function Popup({
         .then((res) => res.json())
         .then(
           (result) => {
-            if (result.length > 0) setCommentsData(result);
-            // else setCommentsData(demoComments);
+            setCommentsData(result);
           },
-          // Note: it's important to handle errors here
-          // instead of a catch() block so that we don't swallow
-          // exceptions from actual bugs in components.
           (error) => {
             setAlertMessageData("cannot fetch comments");
           }
@@ -102,6 +97,7 @@ export default function Popup({
     setUserData(JSON.parse(sessionStorage.getItem("userData")));
   }, []);
   const addNewComment = () => {
+    setUserData(JSON.parse(sessionStorage.getItem("userData")));
     const commentData = { content: newComment };
     fetch(getAllComments + `${selectedTicket.id}/comments`, {
       method: "POST", // or 'PUT'
@@ -114,8 +110,12 @@ export default function Popup({
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
-        setCommentsData([...commentsData, data]);
-        setNewComment("");
+        if (data.content) {
+          setCommentsData([...commentsData, data]);
+          setNewComment("");
+        } else {
+          setAlertMessageData(data.message);
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -142,6 +142,7 @@ export default function Popup({
                   setEmail("");
                   setName("");
                   setPassword("");
+                  setCommentsData([]);
                   handleLoginClose({ actionType: "close" });
                 }}
               />
@@ -371,7 +372,7 @@ export default function Popup({
                   label="Assignee"
                   onChange={(event) => setAssignee(event.target.value)}
                 >
-                  {customersData.map((customer) => {
+                  {customerData.map((customer) => {
                     return (
                       <MenuItem key={customer.userId} value={customer.userId}>
                         {customer.userId}
@@ -436,7 +437,8 @@ export default function Popup({
           <DialogActions>
             <Button
               disabled={title === "" || description === ""}
-              onClick={() =>
+              onClick={() => {
+                setCommentsData([]);
                 handleLoginClose({
                   actionType:
                     type === "createTicket" ? "createTicket" : "updateTicket",
@@ -445,8 +447,8 @@ export default function Popup({
                   id: selectedTicket?.id,
                   ticketPriority: ticketPriority,
                   status: status,
-                })
-              }
+                });
+              }}
             >
               {type === "createTicket" ? "Create" : "Update"}
             </Button>

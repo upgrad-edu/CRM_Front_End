@@ -171,6 +171,7 @@ export default function MiniDrawer() {
             setSnackbarOpen(true);
           } else {
             setAlertMessage(`Ticket created with id ${data.id}`);
+            setSnackbarOpen(true);
             fetch(getAllTickets, {
               headers: {
                 "Content-Type": "application/json",
@@ -349,8 +350,7 @@ export default function MiniDrawer() {
           .then((res) => res.json())
           .then(
             (result) => {
-              if (result.length > 0) setCustomersData(result);
-              else setCustomersData(demoCustomerData);
+              setCustomersData(result);
             },
             // Note: it's important to handle errors here
             // instead of a catch() block so that we don't swallow
