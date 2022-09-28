@@ -100,27 +100,6 @@ export default function Popup({
 
   useEffect(() => {
     setUserData(JSON.parse(sessionStorage.getItem("userData")));
-    // if (userData !== null) {
-    //   fetch(getAllUsers, {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "x-access-token": userData?.accessToken,
-    //     },
-    //   })
-    //     .then((res) => res.json())
-    //     .then(
-    //       (result) => {
-    //         if (result.length > 0) setCustomersData(result);
-    //         else setCustomersData([]);
-    //       },
-    //       // Note: it's important to handle errors here
-    //       // instead of a catch() block so that we don't swallow
-    //       // exceptions from actual bugs in components.
-    //       (error) => {
-    //         setAlertMessageData("cant fetch users")
-    //       }
-    //     );
-    // }
   }, []);
   const addNewComment = () => {
     const commentData = { content: newComment };
