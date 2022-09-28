@@ -24,13 +24,14 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { Fragment, useEffect, useState } from "react";
 import { getAllComments, getAllUsers } from "../constants";
-import { demoComments, demoCustomerData } from "../Demodata";
 
 export default function Popup({
   openLogin,
   handleLoginClose,
   type,
   selectedTicket,
+  setAlertMessageData,
+  customerData
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,15 +42,14 @@ export default function Popup({
   const [ticketPriority, setTicketPriority] = useState(null);
   const [status, setStatus] = useState(null);
   const [description, setDescription] = useState(null);
-  const [userTypes, setUserTypes] = useState(null);
-  const [userData, setUserData] = useState(null);
+  const [userTypes, setUserTypes] = useState("CUSTOMER");
+  const [userData, setUserData] = useState(sessionStorage.getItem("userData"));
   const [assignee, setAssignee] = useState(null);
-  const [customersData, setCustomersData] = useState(demoCustomerData);
+  const [customersData, setCustomersData] = useState(customerData);
   const [commentsData, setCommentsData] = useState([]);
   const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
-    setUserData(JSON.parse(sessionStorage.getItem("userData")));
     if (
       title !== selectedTicket?.title ||
       description !== selectedTicket?.description ||
@@ -92,34 +92,35 @@ export default function Popup({
           // instead of a catch() block so that we don't swallow
           // exceptions from actual bugs in components.
           (error) => {
-            setCommentsData(demoComments);
+            setAlertMessageData("cannot fetch comments");
           }
         );
     }
   }, [selectedTicket]);
 
   useEffect(() => {
-    if (userData !== null) {
-      fetch(getAllUsers, {
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": userData?.accessToken,
-        },
-      })
-        .then((res) => res.json())
-        .then(
-          (result) => {
-            if (result.length > 0) setCustomersData(result);
-            else setCustomersData(demoCustomerData);
-          },
-          // Note: it's important to handle errors here
-          // instead of a catch() block so that we don't swallow
-          // exceptions from actual bugs in components.
-          (error) => {
-            setCustomersData(demoCustomerData);
-          }
-        );
-    }
+    setUserData(JSON.parse(sessionStorage.getItem("userData")));
+    // if (userData !== null) {
+    //   fetch(getAllUsers, {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "x-access-token": userData?.accessToken,
+    //     },
+    //   })
+    //     .then((res) => res.json())
+    //     .then(
+    //       (result) => {
+    //         if (result.length > 0) setCustomersData(result);
+    //         else setCustomersData([]);
+    //       },
+    //       // Note: it's important to handle errors here
+    //       // instead of a catch() block so that we don't swallow
+    //       // exceptions from actual bugs in components.
+    //       (error) => {
+    //         setAlertMessageData("cant fetch users")
+    //       }
+    //     );
+    // }
   }, []);
   const addNewComment = () => {
     const commentData = { content: newComment };
@@ -229,11 +230,11 @@ export default function Popup({
               {isRegister && (
                 <FormControl>
                   <FormLabel id="demo-radio-buttons-group-label">
-                    Gender
+                    Type
                   </FormLabel>
                   <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
-                    value={assignee}
+                    value={userTypes}
                     name="radio-buttons-group"
                     onChange={(event) => {
                       setUserTypes(event.target.value);
@@ -364,7 +365,6 @@ export default function Popup({
                 <RadioGroup
                   row
                   aria-labelledby="demo-radio-buttons-group-label"
-                  defaultValue=""
                   name="radio-buttons-group"
                   value={status}
                   onChange={(event) => setStatus(event.target.value)}
@@ -382,7 +382,7 @@ export default function Popup({
                 </RadioGroup>
               </FormControl>
             )}
-            {type === "updateTicket" && userData?.userTypes !== "CUSTOMER" && (
+            {type === "updateTicket" && userData?.userTypes == "ADMIN" && (
               <FormControl fullWidth>
                 <InputLabel id="assignee-label">Assignee</InputLabel>
                 <Select

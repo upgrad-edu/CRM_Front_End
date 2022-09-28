@@ -121,7 +121,7 @@ export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [ticketsData, setTicketsData] = useState(demoTicketData);
-  const [customersData, setCustomersData] = useState(demoCustomerData);
+  const [customersData, setCustomersData] = useState([]);
   const [isTicketsLoaded, setisTicketsLoaded] = useState(false);
   const [popupType, setPopupType] = useState("");
   const [selectedTicket, setSelectedTicket] = useState("");
@@ -381,6 +381,8 @@ export default function MiniDrawer() {
           handleLoginClose={handlePopupClose}
           type={popupType}
           selectedTicket={selectedTicket}
+          setAlertMessageData ={(message) => {setAlertMessage(message);setSnackbarOpen(true)}}
+          customerData = {customersData}
         />
         <CssBaseline />
         <AppBar className="App-header" position="fixed" open={open}>
