@@ -143,6 +143,8 @@ export default function Popup({
                   setName("");
                   setPassword("");
                   setCommentsData([]);
+                  setTitle("");
+                  setDescription("");
                   handleLoginClose({ actionType: "close" });
                 }}
               />
@@ -362,7 +364,7 @@ export default function Popup({
                 </RadioGroup>
               </FormControl>
             )}
-            {type === "updateTicket" && userData?.userTypes == "ADMIN" && (
+            {type === "updateTicket" && userData.userTypes === "ADMIN" && (
               <FormControl fullWidth>
                 <InputLabel id="assignee-label">Assignee</InputLabel>
                 <Select
@@ -439,6 +441,8 @@ export default function Popup({
               disabled={title === "" || description === ""}
               onClick={() => {
                 setCommentsData([]);
+                setTitle("");
+                setDescription("");
                 handleLoginClose({
                   actionType:
                     type === "createTicket" ? "createTicket" : "updateTicket",
@@ -447,6 +451,7 @@ export default function Popup({
                   id: selectedTicket?.id,
                   ticketPriority: ticketPriority,
                   status: status,
+                  assignee:assignee
                 });
               }}
             >

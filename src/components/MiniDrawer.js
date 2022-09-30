@@ -207,6 +207,7 @@ export default function MiniDrawer() {
         description: data.description,
         ticketPriority: data.ticketPriority,
         status: data.status,
+        assignee:data.assignee
       };
       fetch(updateTicketById + `${data.id}`, {
         method: "PUT", // or 'PUT'
