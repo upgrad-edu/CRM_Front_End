@@ -134,6 +134,7 @@ export default function Popup({
                   setCommentsData([]);
                   setTitle("");
                   setDescription("");
+                  setUserId("");
                   handleLoginClose({ actionType: "close" });
                 }}
               />
@@ -169,6 +170,7 @@ export default function Popup({
                 type="text"
                 fullWidth
                 variant="standard"
+                value={userId}
                 onChange={(event) => setUserId(event.target.value)}
               />
 
@@ -196,6 +198,7 @@ export default function Popup({
                 type="password"
                 fullWidth
                 variant="standard"
+                value={password}
                 onChange={(event) => setPassword(event.target.value)}
               />
               {isRegister && (
@@ -257,6 +260,8 @@ export default function Popup({
                 disabled={userId === "" || password === ""}
                 onClick={() => {
                   setIsRegister(false);
+                  setUserId("");
+                  setPassword("");
                   handleLoginClose({
                     actionType: "login",
                     userId: userId,
