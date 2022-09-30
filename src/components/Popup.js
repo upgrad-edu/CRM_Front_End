@@ -29,7 +29,7 @@ export default function Popup({
   openLogin,
   handleLoginClose,
   type,
-  selectedTicket,
+  selectedTicket=null,
   setAlertMessageData,
   customerData,
 }) {
@@ -38,30 +38,19 @@ export default function Popup({
   const [userId, setUserId] = useState("");
   const [isRegister, setIsRegister] = useState(false);
   const [name, setName] = useState("");
-  const [title, setTitle] = useState(null);
-  const [ticketPriority, setTicketPriority] = useState(null);
-  const [status, setStatus] = useState(null);
-  const [description, setDescription] = useState(null);
+  const [title, setTitle] = useState("");
+  const [ticketPriority, setTicketPriority] = useState(4);
+  const [status, setStatus] = useState("OPEN");
+  const [description, setDescription] = useState("");
   const [userTypes, setUserTypes] = useState("CUSTOMER");
   const [userData, setUserData] = useState(sessionStorage.getItem("userData"));
-  const [assignee, setAssignee] = useState(null);
+  const [assignee, setAssignee] = useState("");
   const [commentsData, setCommentsData] = useState([]);
   const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
-    if (
-      title !== selectedTicket?.title ||
-      description !== selectedTicket?.description ||
-      status !== selectedTicket?.status ||
-      assignee !== selectedTicket?.assignee ||
-      ticketPriority !== selectedTicket?.ticketPriority
-    ) {
-      setTitle(selectedTicket?.title);
-      setDescription(selectedTicket?.description);
-      setStatus(selectedTicket?.status);
-      setTicketPriority(selectedTicket?.ticketPriority);
-      setAssignee(selectedTicket?.assignee);
-    } else if (selectedTicket != null) {
+    setUserData(JSON.parse(sessionStorage.getItem("userData")));
+     if (selectedTicket != null) {
       setTitle(selectedTicket?.title);
       setDescription(selectedTicket?.description);
       setStatus(selectedTicket?.status);
@@ -73,17 +62,20 @@ export default function Popup({
       setStatus("");
       setTicketPriority("");
     }
-
+    const userInfo = JSON.parse(sessionStorage.getItem("userData"));
     if (selectedTicket?.id) {
       fetch(getAllComments + `${selectedTicket.id}/comments`, {
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": userData?.accessToken,
+          "x-access-token": userInfo?.accessToken,
         },
       })
         .then((res) => res.json())
         .then(
           (result) => {
+            if(result.message)
+            setAlertMessageData("cannot fetch comments");
+            else
             setCommentsData(result);
           },
           (error) => {
@@ -93,9 +85,6 @@ export default function Popup({
     }
   }, [selectedTicket]);
 
-  useEffect(() => {
-    setUserData(JSON.parse(sessionStorage.getItem("userData")));
-  }, []);
   const addNewComment = () => {
     setUserData(JSON.parse(sessionStorage.getItem("userData")));
     const commentData = { content: newComment };
@@ -364,7 +353,7 @@ export default function Popup({
                 </RadioGroup>
               </FormControl>
             )}
-            {type === "updateTicket" && userData.userTypes === "ADMIN" && (
+            {type === "updateTicket" && userData?.userTypes === "ADMIN" && (
               <FormControl fullWidth>
                 <InputLabel id="assignee-label">Assignee</InputLabel>
                 <Select
@@ -393,8 +382,8 @@ export default function Popup({
                   )}
                   {commentsData && commentsData.length>0 && commentsData.map((comment) => {
                     return (
-                      <Fragment>
-                        <ListItem alignItems="flex-start">
+                      <Fragment  key={comment.id}>
+                        <ListItem alignItems="flex-start" key={comment.id}>
                           <ListItemText
                             primary={comment?.content}
                             secondary={
@@ -421,7 +410,7 @@ export default function Popup({
                   multiline
                   rows={4}
                   fullWidth
-                  defaultValue=""
+                 value={newComment}
                   onChange={(event) => {
                     setNewComment(event.target.value);
                   }}
