@@ -386,15 +386,15 @@ export default function Popup({
             {type === "updateTicket" && (
               <Fragment>
                 <List sx={{ width: "100%", padding: "20px" }}>
-                  {commentsData.length > 0 && (
+                  {commentsData && commentsData.length>0 && (
                     <Typography>Comments:</Typography>
                   )}
-                  {commentsData.map((comment) => {
+                  {commentsData && commentsData.length>0 && commentsData.map((comment) => {
                     return (
                       <Fragment>
                         <ListItem alignItems="flex-start">
                           <ListItemText
-                            primary={comment.content}
+                            primary={comment?.content}
                             secondary={
                               <Fragment>
                                 <Typography
@@ -402,7 +402,7 @@ export default function Popup({
                                   component="span"
                                   variant="body2"
                                 >
-                                  {comment.commenterId}
+                                  {comment?.commenterId}
                                 </Typography>
                               </Fragment>
                             }
