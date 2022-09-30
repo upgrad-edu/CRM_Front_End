@@ -122,7 +122,6 @@ export default function MiniDrawer() {
   const [open, setOpen] = useState(false);
   const [ticketsData, setTicketsData] = useState(demoTicketData);
   const [customersData, setCustomersData] = useState([]);
-  const [isTicketsLoaded, setisTicketsLoaded] = useState(false);
   const [popupType, setPopupType] = useState("");
   const [selectedTicket, setSelectedTicket] = useState("");
   const [openLogin, setOpenLogin] = useState(false);

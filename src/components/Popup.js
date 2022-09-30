@@ -372,7 +372,7 @@ export default function Popup({
                   label="Assignee"
                   onChange={(event) => setAssignee(event.target.value)}
                 >
-                  {customerData.map((customer) => {
+                  {customerData.filter((customer)=>customer.userTypes==="ENGINEER").map((customer) => {
                     return (
                       <MenuItem key={customer.userId} value={customer.userId}>
                         {customer.userId}
