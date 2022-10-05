@@ -10,6 +10,7 @@ export default function ImgMediaCard({
   handlePopupOpen,
   setSelectedTicketData,
   setAlertMessageData,
+  UpdateUserData
 }) {
   //const [alertMessage,setAlertMessage] = useState(null);
   const userDataFromStorage = JSON.parse(sessionStorage.getItem("userData"));
@@ -41,6 +42,7 @@ export default function ImgMediaCard({
         console.log("Success:", data);
         setAlertMessageData(data.message);
         setCardUserData({ ...cardUserdata, userStatus: status });
+        UpdateUserData(userData);
       })
       .catch((error) => {
         console.error("Error:", error);

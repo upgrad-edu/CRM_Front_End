@@ -602,6 +602,12 @@ export default function MiniDrawer() {
                           setAlertMessage(message);
                           setSnackbarOpen(true);
                         }}
+                        UpdateUserData = {(userData)=>{
+                          setCustomersData(customersData.map(p =>
+                            p.userId === userData.userId
+                              ? { ...p, userStatus: userData.userStatus }
+                              : p
+                          ))}}
                       />
                     )}
                   </React.Fragment>

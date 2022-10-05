@@ -44,6 +44,7 @@ export default function BasicTabs({
   customerData,
   setAlertMessageData,
   ticketsData,
+  UpdateUserData
 }) {
   const [value, setValue] = React.useState(0);
 
@@ -90,6 +91,7 @@ export default function BasicTabs({
                 data={customer}
                 index={index}
                 setAlertMessageData={(data) => setAlertMessageData(data)}
+                UpdateUserData={(userData)=> UpdateUserData(userData)}
               />
             );
           })}
