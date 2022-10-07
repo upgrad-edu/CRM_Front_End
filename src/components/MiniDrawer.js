@@ -20,6 +20,9 @@ import ListItemText from "@mui/material/ListItemText";
 import ImgMediaCard from "./CardListView";
 import Login from "@mui/icons-material/Login";
 import Snackbar from "@mui/material/Snackbar";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
 import { demoCustomerData, demoTicketData } from "../Demodata";
 import Popup from "./Popup";
 import { Dashboard } from "../pages/Dashbaord";
@@ -182,7 +185,7 @@ export default function MiniDrawer() {
                 (result) => {
                   setTicketsData(result);
                   setTimeout(() => {
-                    setStatusFilter(statusFilter===""?"OPEN":"");
+                    setStatusFilter(statusFilter === "" ? "OPEN" : "");
                   }, 1000);
                 },
                 // Note: it's important to handle errors here
@@ -207,7 +210,7 @@ export default function MiniDrawer() {
         description: data.description,
         ticketPriority: data.ticketPriority,
         status: data.status,
-        assignee:data.assignee
+        assignee: data.assignee,
       };
       fetch(updateTicketById + `${data.id}`, {
         method: "PUT", // or 'PUT'
@@ -233,7 +236,7 @@ export default function MiniDrawer() {
               (result) => {
                 setTicketsData(result);
                 setTimeout(() => {
-                  setStatusFilter(statusFilter===""?"OPEN":"");
+                  setStatusFilter(statusFilter === "" ? "OPEN" : "");
                 }, 1000);
               },
               // Note: it's important to handle errors here
@@ -381,8 +384,11 @@ export default function MiniDrawer() {
           handleLoginClose={handlePopupClose}
           type={popupType}
           selectedTicket={selectedTicket}
-          setAlertMessageData ={(message) => {setAlertMessage(message);setSnackbarOpen(true)}}
-          customerData = {customersData}
+          setAlertMessageData={(message) => {
+            setAlertMessage(message);
+            setSnackbarOpen(true);
+          }}
+          customerData={customersData}
         />
         <CssBaseline />
         <AppBar className="App-header" position="fixed" open={open}>
@@ -528,37 +534,25 @@ export default function MiniDrawer() {
                     <DrawerHeader />
                     {ticketsData.length > 0 && (
                       <FormControl>
-                        <FormLabel id="demo-radio-buttons-group-label">
+                        <InputLabel id="demo-simple-select-label">
                           Status
-                        </FormLabel>
-                        <RadioGroup
-                          row
-                          aria-labelledby="demo-radio-buttons-group-label"
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
                           value={statusFilter}
-                          name="radio-buttons-group"
+                          label="Status"
                           onChange={(event) =>
                             setStatusFilter(event.target.value)
                           }
                         >
-                          <FormControlLabel
-                            value=""
-                            control={<Radio />}
-                            label="ALL"
-                          />
-                          <FormControlLabel
-                            value="OPEN"
-                            control={<Radio />}
-                            label="OPEN"
-                          />
-                          <FormControlLabel
-                            value="CLOSED"
-                            control={<Radio />}
-                            label="CLOSED"
-                          />
-                        </RadioGroup>
+                          <MenuItem value="ALL">ALL</MenuItem>
+                          <MenuItem value="OPEN">OPEN</MenuItem>
+                          <MenuItem value="CLOSED">CLOSED</MenuItem>
+                        </Select>
                       </FormControl>
                     )}
-                    {statusFilter === "" &&
+                    {statusFilter === "ALL" &&
                       ticketsData.length > 0 &&
                       ticketsData.map((ticket, index) => {
                         return (
@@ -602,12 +596,15 @@ export default function MiniDrawer() {
                           setAlertMessage(message);
                           setSnackbarOpen(true);
                         }}
-                        UpdateUserData = {(userData)=>{
-                          setCustomersData(customersData.map(p =>
-                            p.userId === userData.userId
-                              ? { ...p, userStatus: userData.userStatus }
-                              : p
-                          ))}}
+                        UpdateUserData={(userData) => {
+                          setCustomersData(
+                            customersData.map((p) =>
+                              p.userId === userData.userId
+                                ? { ...p, userStatus: userData.userStatus }
+                                : p
+                            )
+                          );
+                        }}
                       />
                     )}
                   </React.Fragment>
